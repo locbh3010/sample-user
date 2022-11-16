@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans;
+  }
+
+  .container {
+    @apply w-[1240px] px-5 mx-auto max-w-full;
+  }
+}
+
+@layer components {
+  select {
+    @apply appearance-none rounded border border-gray-light py-4 px-3 font-medium text-sm outline-none w-full;
+  }
+}
