@@ -6,7 +6,7 @@ import UserIcon from "../icon/UserIcon";
 
 const Nav = () => {
   return (
-    <div className="w-full sticky top-0 left-0 z-50 bg-white mb-4">
+    <div className="w-full sticky top-0 left-0 z-50 bg-white/80 mb-4 py-4 backdrop-blur-sm">
       <div className="container">
         <div className="flex items-center justify-between">
           <Link
@@ -18,7 +18,7 @@ const Nav = () => {
           <div className="flex items-center gap-16 capitalize font-medium">
             <Link to="/shop">Shop</Link>
             <Link>Our Story</Link>
-            <Link>Blog</Link>
+            <Link to="/blogs">Blog</Link>
             <Link>
               <SearchIcon></SearchIcon>
             </Link>

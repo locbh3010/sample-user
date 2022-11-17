@@ -4,6 +4,8 @@ import Layout from "./components/layout/Layout";
 import ForgotPassword from "./pages/account/ForgotPassword";
 import Register from "./pages/account/Register";
 import SignIn from "./pages/account/SignIn";
+import Blog from "./pages/blog/Blog";
+import Blogs from "./pages/blog/Blogs";
 import Home from "./pages/home/Home";
 import ProductDetail from "./pages/product/ProductDetail";
 import Shop from "./pages/shop/Shop";
@@ -19,6 +21,8 @@ const App = () => {
           <Route path="/sign-in" element={<SignIn />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/forgot-password" element={<ForgotPassword />}></Route>
+          <Route path="/blogs" element={<Blogs />}></Route>
+          <Route path="/blog/:id" element={<Blog />}></Route>
         </Route>
       </Routes>
     </div>
