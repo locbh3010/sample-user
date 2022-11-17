@@ -1,10 +1,18 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
 import Button from "../../components/ui/button/Button";
 import Checkbox from "../../components/ui/input/Checkbox";
 import Input from "../../components/ui/input/Input";
 
 const SignIn = () => {
+  const { control, handleSubmit } = useForm({
+    mode: onchange,
+  });
+  const handleSignIn = (value) => {
+    console.log(value);
+  };
+
   return (
     <div className="pt-32 pb-[250px]">
       <div className="container">
@@ -32,12 +40,20 @@ const SignIn = () => {
             </div>
           </div>
 
-          <form className="flex flex-col mt-32">
+          <form
+            className="flex flex-col mt-32"
+            onSubmit={handleSubmit(handleSignIn)}
+          >
             <div className="mb-11.5">
-              <Input name="email" placeholder="Email" />
+              <Input name="email" placeholder="Email" control={control} />
             </div>
             <div className="mb-4">
-              <Input name="password" placeholder="Password" type="password" />
+              <Input
+                name="password"
+                placeholder="Password"
+                type="password"
+                control={control}
+              />
             </div>
             <Checkbox name="remember" display="Remember me" />
 

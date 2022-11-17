@@ -1,9 +1,13 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
 import Button from "../../components/ui/button/Button";
 import Input from "../../components/ui/input/Input";
 
 const Register = () => {
+  const { control, handleSubmit } = useForm();
+
+  const handleCreateUser = (value) => {};
   return (
     <div className="pt-32 pb-[250px]">
       <div className="container">
@@ -30,12 +34,20 @@ const Register = () => {
               </NavLink>
             </div>
           </div>
-          <form className="flex flex-col mt-32">
+          <form
+            className="flex flex-col mt-32"
+            onSubmit={handleSubmit(handleCreateUser)}
+          >
             <div className="mb-11.5">
-              <Input name="email" placeholder="Email" />
+              <Input name="email" placeholder="Email" control={control} />
             </div>
             <div className="mb-4">
-              <Input name="password" placeholder="Password" type="password" />
+              <Input
+                name="password"
+                placeholder="Password"
+                type="password"
+                control={control}
+              />
             </div>
 
             <div className="mt-17">
