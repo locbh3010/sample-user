@@ -47,8 +47,13 @@ const Home = () => {
       </div>
       <div className="container mt-16 mb-[250px]">
         <div className="flex items-center justify-between mb-10">
-          <h1 className="font-medium text-3xl">Shop The Latest</h1>
-          <Link className="capitalize text-xl font-medium">View All</Link>
+          <h2 className="font-medium text-3xl">Shop The Latest</h2>
+          <Link
+            className="capitalize text-xl font-medium text-accent"
+            to="/shop"
+          >
+            View All
+          </Link>
         </div>
         <ProductList>
           {products?.length > 0 &&

@@ -15,22 +15,28 @@ export const ProductItem = ({ data }) => {
     navigate(`/product/${data.id}`);
   };
   return (
-    <div
-      className="w-full h-auto flex flex-col cursor-pointer"
-      onClick={handleNavigate}
-    >
-      <div className="rounded-lg overflow-hidden mb-6 aspect-square flex-shrink-0">
+    <div className="w-full h-auto flex flex-col cursor-pointer group">
+      <div
+        className="rounded-lg overflow-hidden mb-6 aspect-square flex-shrink-0 relative"
+        onClick={handleNavigate}
+      >
         <img
           src={data.images[0]}
           alt=""
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full h-full object-cover rounded-lg scale-125"
         />
+        <div className="absolute bottom-0 left-0 w-full duration-300 bg-white/50 py-5.5 uppercase text-black font-bold flex-center hover:bg-white/70 translate-y-full group-hover:translate-y-0">
+          add to cart
+        </div>
       </div>
       <div className="flex-1">
-        <span className="text-2xl font-normal mb-4 block line-clamp-1">
+        <span
+          className="text-2xl font-normal mb-4 block line-clamp-1"
+          onClick={handleNavigate}
+        >
           {data.name}
         </span>
-        <span className="tet-xl font-normal block text-accent">
+        <span className="text-xl font-medium text-accent block">
           ${data.price}
         </span>
       </div>

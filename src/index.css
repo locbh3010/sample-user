@@ -17,3 +17,9 @@
     @apply appearance-none rounded border border-gray-light py-4 px-3 font-medium text-sm outline-none w-full;
   }
 }
+
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+}
