@@ -3,8 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap");
   body {
-    @apply font-sans;
+    /* @apply font-sans; */
+    font-family: "DM Sans", sans-serif;
   }
 
   .container {
