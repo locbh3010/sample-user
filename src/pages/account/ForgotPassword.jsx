@@ -1,8 +1,12 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import Button from "../../components/ui/button/Button";
 import Input from "../../components/ui/input/Input";
 
 const ForgotPassword = () => {
+  const { control, handleSubmit } = useForm();
+
+  const handleForgot = (value) => {};
   return (
     <div className="pt-32 pb-[250px]">
       <div className="container">
@@ -17,8 +21,11 @@ const ForgotPassword = () => {
             </p>
           </div>
 
-          <form className="flex flex-col gap-16">
-            <Input name="email" placeholder="Email" />
+          <form
+            className="flex flex-col gap-16"
+            onSubmit={handleSubmit(handleForgot)}
+          >
+            <Input name="email" placeholder="Email" control={control} />
             <Button type="secondary">SIGN IN</Button>
           </form>
         </div>
