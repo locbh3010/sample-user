@@ -1,13 +1,20 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Button from "../../components/ui/button/Button";
 import Input from "../../components/ui/input/Input";
+import { userStore } from "../../store/user-store";
 
 const Register = () => {
   const { control, handleSubmit } = useForm();
+  const navigate = useNavigate();
+  const { signUp } = userStore((state) => state);
 
-  const handleCreateUser = (value) => {};
+  const handleCreateUser = (value) => {
+    signUp(value, () => {
+      navigate("/");
+    });
+  };
   return (
     <div className="pt-32 pb-[250px]">
       <div className="container">
@@ -38,6 +45,13 @@ const Register = () => {
             className="flex flex-col mt-32"
             onSubmit={handleSubmit(handleCreateUser)}
           >
+            <div className="mb-11.5">
+              <Input
+                name="fullname"
+                placeholder="Full name"
+                control={control}
+              />
+            </div>
             <div className="mb-11.5">
               <Input name="email" placeholder="Email" control={control} />
             </div>

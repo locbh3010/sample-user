@@ -1,16 +1,27 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Button from "../../components/ui/button/Button";
 import Checkbox from "../../components/ui/input/Checkbox";
 import Input from "../../components/ui/input/Input";
+import { userStore } from "../../store/user-store";
 
 const SignIn = () => {
   const { control, handleSubmit } = useForm({
     mode: onchange,
   });
+  const navigate = useNavigate();
+  const { signIn, user } = userStore((state) => state);
   const handleSignIn = (value) => {
-    console.log(value);
+    signIn(value.email, value.password, () => {
+      navigate("/");
+    });
+
+    // signInWithEmailAndPassword(auth, value.email, value.password).then(
+    //   (res) => {
+    //     navigate("/");
+    //   }
+    // );
   };
 
   return (
