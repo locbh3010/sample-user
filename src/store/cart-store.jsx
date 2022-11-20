@@ -16,13 +16,4 @@ export const cartStore = create((set, get) => ({
       document.body.classList.remove("overflow-hidden");
     }
   },
-  cartList: () => {
-    console.log("list");
-  },
-  deleteItemCart: () => {
-    console.log("delete");
-  },
-  addItemCart: () => {
-    console.log("add");
-  },
 }));

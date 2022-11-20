@@ -1,8 +1,9 @@
-import React, { useEffect, useReducer, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { cartStore } from "../../../store/cart-store";
 import CloseIcon from "../../icon/CloseIcon";
 import Button from "../button/Button";
+import { userStore } from "../../../store/user-store";
 
 export const Carts = () => {
   const { isOpen, handleOpenCart } = cartStore((state) => state);
@@ -46,20 +47,17 @@ export const Carts = () => {
 
 const CartList = () => {
   return (
-    <div className="flex-1 px-7 py-8 overflow-y-scroll gap-7 flex flex-col">
-      <CartItem />
-      <CartItem />
-      <CartItem />
-    </div>
+    <div className="flex-1 px-7 py-8 overflow-y-scroll gap-7 flex flex-col"></div>
   );
 };
 
-export const CartItem = () => {
+export const CartItem = ({ data }) => {
+  const handleDeleteItem = () => {};
   return (
     <div className="grid grid-cols-2 gap-2 w-full">
       <div className="overflow-hidden aspect-square rounded flex-shrink-0">
         <img
-          src="https://i.pinimg.com/236x/2a/9b/d4/2a9bd4501756808d01ed7f70e2ea0106.jpg"
+          src={data.images[0]}
           alt=""
           className="w-full h-full object-cover"
         />
@@ -67,16 +65,16 @@ export const CartItem = () => {
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
           <p className="font-semibold text-sm line-clamp-1 flex-1">
-            Lira Earrings
+            {data.name}
           </p>
-          <button className="flex-shrink-0">
+          <button className="flex-shrink-0" onClick={handleDeleteItem}>
             <CloseIcon width="16px" />
           </button>
         </div>
         <span className="text-sm font-medium text-gray-dark">
           Black/ Medium
         </span>
-        <span className="text-accent text-sm font-medium">$14,00</span>
+        <span className="text-accent text-sm font-medium">${data.price}</span>
       </div>
     </div>
   );

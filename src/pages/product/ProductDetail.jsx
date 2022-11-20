@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   collection,
@@ -6,7 +6,9 @@ import {
   documentId,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { db } from "../../configs/firebase-configs";
@@ -19,18 +21,23 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper";
 import Button from "../../components/ui/button/Button";
 import { userStore } from "../../store/user-store";
+import { toast } from "react-toastify";
+
+const notifySuccess = () => {
+  toast.success("Thêm vào giỏ hàng thành công");
+};
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const { user } = userStore((state) => state);
   const colRef = collection(db, "products");
   const productRef = doc(colRef, id);
   const description = useRef(null);
+  const navigate = useNavigate();
+  const [amount, setAmount] = useState(1);
 
   const [product, setProduct] = useState({});
   const [similars, setSimilars] = useState([]);
-  const navigate = useNavigate();
-
-  const { user } = userStore((state) => state);
 
   useEffect(() => {
     getDoc(productRef).then((res) => {
@@ -63,12 +70,60 @@ const ProductDetail = () => {
     description.current.insertAdjacentHTML("beforeend", product?.description);
   }, [product]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = useCallback(() => {
     if (user) {
-      const cartCol = collection(db, "carts");
-      const userId = user.id;
+      const uid = user.id;
+      const pid = product.id;
+      const cartRef = collection(db, "carts");
+      const cart = doc(cartRef, uid);
+      setAmount(Number(amount));
+
+      getDoc(cart).then((res) => {
+        if (res?.data()?.items) {
+          const items = res.data().items;
+          if (items.length > 0) {
+            const index = items.findIndex((obj) => {
+              return obj.pid === pid;
+            });
+
+            if (index !== -1) {
+              console.log(items);
+              setDoc(cart, { items });
+            } else {
+              items.unshift({ amount: +amount, pid });
+              setDoc(cart, { items }).then(notifySuccess);
+            }
+          }
+        } else {
+          const data = {
+            items: [{ pid, amount }],
+          };
+          setDoc(cart, data).then(notifySuccess);
+        }
+      });
     } else {
       navigate("/sign-in");
+    }
+  }, [product.id]);
+  const handleActionAmount = (e) => {
+    const type = e.target.dataset.type;
+    switch (type) {
+      case "inc":
+        if (amount < product.count) {
+          setAmount(amount + 1);
+        } else {
+          setAmount(product.count);
+        }
+        break;
+      case "dec":
+        if (amount > 1) {
+          setAmount(amount - 1);
+        } else {
+          setAmount(1);
+        }
+        break;
+      default:
+        break;
     }
   };
 
@@ -115,7 +170,34 @@ const ProductDetail = () => {
               className="py-12 line-clamp-4 text-gray-dark"
               ref={description}
             ></p>
-            <Button onClick={handleAddToCart}>add to cart</Button>
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 grid grid-cols-3 rounded bg-gray-light text-gray-dark font-bold basis-1/3 overflow-hidden select-none">
+                <div
+                  className="aspect-square flex items-center justify-center h-full cursor-pointer duration-300 hover:bg-gray-400 rounded-l"
+                  data-type="dec"
+                  onClick={handleActionAmount}
+                >
+                  -
+                </div>
+                <div className="aspect-square flex items-center justify-center h-full cursor-pointer">
+                  {amount}
+                </div>
+                <div
+                  className="aspect-square flex items-center justify-center h-full cursor-pointer duration-300 hover:bg-gray-400 rounded-r"
+                  data-type="inc"
+                  onClick={handleActionAmount}
+                >
+                  +
+                </div>
+              </div>
+              <Button
+                onClick={() => {
+                  handleAddToCart(user, product);
+                }}
+              >
+                add to cart
+              </Button>
+            </div>
             <div className="mt-16 flex flex-col gap-2">
               <p className="text-black font-medium">
                 SKU: <span className="text-gray-dark">{product?.count}</span>
@@ -150,4 +232,4 @@ const ProductDetail = () => {
   );
 };
 
-export default ProductDetail;
+export default React.memo(ProductDetail);

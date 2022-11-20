@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cartStore } from "../../store/cart-store";
 import { userStore } from "../../store/user-store";
 import SearchIcon from "../icon/SearchIcon";
@@ -10,13 +10,18 @@ import Button from "../ui/button/Button";
 const Nav = () => {
   const { user, signOut } = userStore((state) => state);
   const { handleOpenCart } = cartStore((state) => state);
+  const navigate = useNavigate();
 
   const handleSignOut = () => {
     signOut();
   };
 
   const handleClickButtonCart = () => {
-    handleOpenCart();
+    if (user) {
+      handleOpenCart();
+    } else {
+      navigate("/sign-in");
+    }
   };
 
   return (
