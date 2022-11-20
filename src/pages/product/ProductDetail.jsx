@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   collection,
   doc,
@@ -18,6 +18,7 @@ import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper";
 import Button from "../../components/ui/button/Button";
+import { userStore } from "../../store/user-store";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -27,6 +28,9 @@ const ProductDetail = () => {
 
   const [product, setProduct] = useState({});
   const [similars, setSimilars] = useState([]);
+  const navigate = useNavigate();
+
+  const { user } = userStore((state) => state);
 
   useEffect(() => {
     getDoc(productRef).then((res) => {
@@ -58,6 +62,15 @@ const ProductDetail = () => {
     description.current.textContent = "";
     description.current.insertAdjacentHTML("beforeend", product?.description);
   }, [product]);
+
+  const handleAddToCart = () => {
+    if (user) {
+      const cartCol = collection(db, "carts");
+      const userId = user.id;
+    } else {
+      navigate("/sign-in");
+    }
+  };
 
   return (
     <div className="mt-[128px] mb-[250px]">
@@ -102,7 +115,7 @@ const ProductDetail = () => {
               className="py-12 line-clamp-4 text-gray-dark"
               ref={description}
             ></p>
-            <Button>add to cart</Button>
+            <Button onClick={handleAddToCart}>add to cart</Button>
             <div className="mt-16 flex flex-col gap-2">
               <p className="text-black font-medium">
                 SKU: <span className="text-gray-dark">{product?.count}</span>

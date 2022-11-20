@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { cartStore } from "../../store/cart-store";
 import { userStore } from "../../store/user-store";
 import SearchIcon from "../icon/SearchIcon";
 import ShoppingCart from "../icon/ShoppingCart";
@@ -8,9 +9,14 @@ import Button from "../ui/button/Button";
 
 const Nav = () => {
   const { user, signOut } = userStore((state) => state);
+  const { handleOpenCart } = cartStore((state) => state);
 
   const handleSignOut = () => {
     signOut();
+  };
+
+  const handleClickButtonCart = () => {
+    handleOpenCart();
   };
 
   return (
@@ -30,9 +36,9 @@ const Nav = () => {
             <Link>
               <SearchIcon></SearchIcon>
             </Link>
-            <Link>
-              <ShoppingCart></ShoppingCart>
-            </Link>
+            <button className="toggle-cart" onClick={handleClickButtonCart}>
+              <ShoppingCart className="pointer-events-none"></ShoppingCart>
+            </button>
             {!user ? (
               <Link to="/sign-in">
                 <UserIcon></UserIcon>

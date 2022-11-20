@@ -1,5 +1,7 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
+import CloseIcon from "../icon/CloseIcon";
+import Button from "../ui/button/Button";
 import Footer from "./Footer";
 import Nav from "./Nav";
 

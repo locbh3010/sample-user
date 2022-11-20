@@ -25,9 +25,9 @@ export const ProductItem = ({ data }) => {
           alt=""
           className="w-full h-full object-cover rounded-lg scale-125"
         />
-        <div className="absolute bottom-0 left-0 w-full duration-300 bg-white/50 py-5.5 uppercase text-black font-bold flex-center hover:bg-white/70 translate-y-full group-hover:translate-y-0">
+        <button className="absolute bottom-0 left-0 w-full duration-300 bg-white/50 py-5.5 uppercase text-black font-bold flex-center hover:bg-white/70 translate-y-full group-hover:translate-y-0">
           add to cart
-        </div>
+        </button>
       </div>
       <div className="flex-1">
         <span

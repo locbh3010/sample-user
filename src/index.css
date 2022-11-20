@@ -7,6 +7,7 @@
   body {
     /* @apply font-sans; */
     font-family: "DM Sans", sans-serif;
+    scroll-behavior: smooth;
   }
 
   .container {

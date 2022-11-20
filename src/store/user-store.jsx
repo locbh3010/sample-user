@@ -31,7 +31,6 @@ export const userStore = create((set) => ({
             };
             sessionStorage.setItem("user", JSON.stringify(currentUser));
             set({ user: currentUser });
-            callback();
           }
         });
     });
@@ -52,9 +51,17 @@ export const userStore = create((set) => ({
 
     if (count === 0) {
       if (currentUser.fullname && currentUser.email && currentUser.password) {
-        addDoc(collection(db, "users"), currentUser);
-        set({ user: currentUser });
-        callback();
+        addDoc(collection(db, "users"), currentUser).then((res) => {
+          const user = {
+            email: currentUser.email,
+            password: currentUser.password,
+            fullname: currentUser.fullname,
+            id: res.id,
+          };
+          sessionStorage.setItem("user", JSON.stringify(user));
+          set({ user: user });
+          callback();
+        });
       }
     }
   },
