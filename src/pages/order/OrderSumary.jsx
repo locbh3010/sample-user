@@ -8,13 +8,13 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Button from "../../components/ui/button/Button";
 import { db } from "../../configs/firebase-configs";
 import { userStore } from "../../store/user-store";
 
-const SumaryItem = ({ data }) => {
+export const SumaryItem = ({ data }) => {
   return (
     <div className="flex items-center justify-between capitalize">
       <span>
