@@ -8,6 +8,7 @@ const CloseIcon = ({ width = "24px", height = width }) => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
+      className="pointer-events-none"
       style={{
         width,
         height,

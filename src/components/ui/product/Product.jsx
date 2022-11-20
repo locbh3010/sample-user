@@ -1,3 +1,4 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 export const ProductList = ({ children }) => {
@@ -8,7 +9,7 @@ export const ProductList = ({ children }) => {
   );
 };
 
-export const ProductItem = ({ data }) => {
+export const ProductItem = React.memo(({ data }) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
@@ -42,4 +43,4 @@ export const ProductItem = ({ data }) => {
       </div>
     </div>
   );
-};
+});

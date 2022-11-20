@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   collection,
   doc,
@@ -76,27 +76,31 @@ const ProductDetail = () => {
       const pid = product.id;
       const cartRef = collection(db, "carts");
       const cart = doc(cartRef, uid);
-      setAmount(Number(amount));
 
       getDoc(cart).then((res) => {
-        if (res?.data()?.items) {
+        if (res.data()?.items) {
           const items = res.data().items;
-          if (items.length > 0) {
-            const index = items.findIndex((obj) => {
-              return obj.pid === pid;
-            });
+          const index = items.findIndex((obj) => {
+            return obj.pid === pid;
+          });
 
-            if (index !== -1) {
-              console.log(items);
-              setDoc(cart, { items });
-            } else {
-              items.unshift({ amount: +amount, pid });
-              setDoc(cart, { items }).then(notifySuccess);
-            }
+          if (index !== -1) {
+            items[index].amount = amount;
+            setDoc(cart, { items });
+            return;
+          } else {
+            items.unshift({
+              amount,
+              pid,
+              price: product.price,
+              name: product.name,
+            });
+            setDoc(cart, { items }).then(notifySuccess);
+            return;
           }
         } else {
           const data = {
-            items: [{ pid, amount }],
+            items: [{ pid, amount, price: product.price, name: product.name }],
           };
           setDoc(cart, data).then(notifySuccess);
         }
@@ -104,7 +108,7 @@ const ProductDetail = () => {
     } else {
       navigate("/sign-in");
     }
-  }, [product.id]);
+  }, [amount, product]);
   const handleActionAmount = (e) => {
     const type = e.target.dataset.type;
     switch (type) {
@@ -112,7 +116,7 @@ const ProductDetail = () => {
         if (amount < product.count) {
           setAmount(amount + 1);
         } else {
-          setAmount(product.count);
+          setAmount(+product.count);
         }
         break;
       case "dec":
@@ -190,13 +194,7 @@ const ProductDetail = () => {
                   +
                 </div>
               </div>
-              <Button
-                onClick={() => {
-                  handleAddToCart(user, product);
-                }}
-              >
-                add to cart
-              </Button>
+              <Button onClick={handleAddToCart}>add to cart</Button>
             </div>
             <div className="mt-16 flex flex-col gap-2">
               <p className="text-black font-medium">

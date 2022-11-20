@@ -1,30 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  query,
+  where,
+  collection,
+  onSnapshot,
+  Timestamp,
+} from "firebase/firestore";
+import { db } from "../../configs/firebase-configs";
+import { userStore } from "../../store/user-store";
 
 const Orders = () => {
-  function OrderItem() {
+  const { user } = userStore((state) => state);
+  const [orders, setOrders] = useState([]);
+  const colRef = collection(db, "orders");
+  function OrderItem({ order }) {
     return (
       <tr className="bg-white border-b">
         <th
           scope="row"
           className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
         >
-          DKVUIAD801KDFN
+          {order.id}
         </th>
         <th
           scope="row"
-          className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
+          className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap capitalize"
         >
-          Pending
+          {order.status}
         </th>
-        <td className="py-4 px-6">15 October 2022</td>
-        <td className="py-4 px-6">$100</td>
+        <td className="py-4 px-6">{order.date.toDate().toDateString()}</td>
+        <td className="py-4 px-6">${order.total}</td>
         <td className="py-4 px-6 text-accent font-medium">
-          <Link to="/order-preview">View Order</Link>
+          <Link to={`/order/${order.id}`}>View Order</Link>
         </td>
       </tr>
     );
   }
+
+  useEffect(() => {
+    if (user.id) {
+      const orderQuery = query(colRef, where("uid", "==", user.id));
+      onSnapshot(orderQuery, (res) => {
+        let temp = [];
+        const docs = res.docs;
+        docs?.length > 0 &&
+          docs.map((doc) => temp.push({ id: doc.id, ...doc.data() }));
+        setOrders(temp);
+      });
+    }
+  }, [user.id]);
+
   return (
     <div className="pt-24 pb-[250px]">
       <div className="container">
@@ -50,10 +76,10 @@ const Orders = () => {
               </tr>
             </thead>
             <tbody>
-              <OrderItem></OrderItem>
-              <OrderItem></OrderItem>
-              <OrderItem></OrderItem>
-              <OrderItem></OrderItem>
+              {orders?.length > 0 &&
+                orders.map((order) => (
+                  <OrderItem key={order.id} order={order} />
+                ))}
             </tbody>
           </table>
         </div>
