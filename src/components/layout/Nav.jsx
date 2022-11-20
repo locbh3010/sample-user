@@ -31,7 +31,7 @@ const Nav = () => {
           </Link>
           <div className="flex items-center gap-16 capitalize font-medium">
             <Link to="/shop">Shop</Link>
-            <Link>Our Story</Link>
+            <Link to="/orders">Order</Link>
             <Link to="/blogs">Blog</Link>
             <Link>
               <SearchIcon></SearchIcon>

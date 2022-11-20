@@ -9,6 +9,9 @@ import Blog from "./pages/blog/Blog";
 import Blogs from "./pages/blog/Blogs";
 import CartPage from "./pages/cart/CartPage";
 import Home from "./pages/home/Home";
+import OrderPreview from "./pages/order/OrderPreview";
+import Orders from "./pages/order/Orders";
+import OrderSumary from "./pages/order/OrderSumary";
 import ProductDetail from "./pages/product/ProductDetail";
 import Shop from "./pages/shop/Shop";
 import { cartStore } from "./store/cart-store";
@@ -35,6 +38,9 @@ const App = () => {
           <Route path="/forgot-password" element={<ForgotPassword />}></Route>
           <Route path="/blogs" element={<Blogs />}></Route>
           <Route path="/blog/:id" element={<Blog />}></Route>
+          <Route path="/order/:id" element={<OrderPreview />}></Route>
+          <Route path="/orders" element={<Orders />}></Route>
+          <Route path="/sumary" element={<OrderSumary />}></Route>
           <Route
             path="/cart"
             element={!user ? <Navigate to="/sign-in"></Navigate> : <CartPage />}

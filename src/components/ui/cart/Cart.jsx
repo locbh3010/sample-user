@@ -50,9 +50,6 @@ const CartList = () => {
       <CartItem />
       <CartItem />
       <CartItem />
-      <CartItem />
-      <CartItem />
-      <CartItem />
     </div>
   );
 };
