@@ -33,6 +33,7 @@ const ProductDetail = () => {
   const colRef = collection(db, "products");
   const productRef = doc(colRef, id);
   const description = useRef(null);
+  const descriptionShowcase = useRef(null);
   const navigate = useNavigate();
   const [amount, setAmount] = useState(1);
 
@@ -67,7 +68,12 @@ const ProductDetail = () => {
   }, [product]);
   useEffect(() => {
     description.current.textContent = "";
+    descriptionShowcase.current.textContent = "";
     description.current.insertAdjacentHTML("beforeend", product?.description);
+    descriptionShowcase.current.insertAdjacentHTML(
+      "beforeend",
+      product?.description
+    );
   }, [product]);
 
   const handleAddToCart = useCallback(() => {
@@ -135,7 +141,7 @@ const ProductDetail = () => {
     <div className="mt-[128px] mb-[250px]">
       <div className="container">
         <div className="grid grid-cols-2 gap-16">
-          <div className="aspect-square overflow-hidden rounded-lg">
+          <div className="aspect-square overflow-hidden border border-gray-300">
             <Swiper
               pagination={{
                 type: "progressbar",
@@ -171,8 +177,8 @@ const ProductDetail = () => {
               ${product?.price}
             </span>
             <p
-              className="py-12 line-clamp-4 text-gray-dark"
-              ref={description}
+              className="py-12 text-gray-dark mb-10 text-ellipsis line-clamp-1"
+              ref={descriptionShowcase}
             ></p>
             <div className="flex gap-4">
               <div className="flex-shrink-0 grid grid-cols-3 rounded bg-gray-light text-gray-dark font-bold basis-1/3 overflow-hidden select-none">

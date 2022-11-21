@@ -11,7 +11,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper";
 
 const Home = () => {
-  const colRef = query(collection(db, "products"), limit(8));
+  const colRef = query(collection(db, "products"), limit(6));
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const Home = () => {
   return (
     <div className="w-full">
       <div className="container">
-        <div className="rounded-2xl overflow-hidden relative">
+        <div className="overflow-hidden relative border border-gray-300">
           <Swiper
             pagination={{
               type: "progressbar",
