@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 export const ProductList = ({ children }) => {
   return (
-    <div className="grid grid-cols-3 gap-12 grid-flow-row auto-rows-fr">
+    <div className="grid grid-cols-4 gap-12 grid-flow-row auto-rows-fr">
       {children}
     </div>
   );
@@ -16,7 +16,7 @@ export const ProductItem = React.memo(({ data }) => {
     navigate(`/product/${data.id}`);
   };
   return (
-    <div className="w-full h-auto flex flex-col cursor-pointer group border border-gray-200">
+    <div className="w-full h-auto flex flex-col cursor-pointer group border border-gray-200 relative">
       <div
         className="rounded-lg overflow-hidden mb-6 aspect-square flex-shrink-0 relative rounded-b-none"
         onClick={handleNavigate}

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cartStore } from "../../../store/cart-store";
 import CloseIcon from "../../icon/CloseIcon";
 import Button from "../button/Button";
 import { userStore } from "../../../store/user-store";
 import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "../../../configs/firebase-configs";
+import { applyActionCode } from "firebase/auth";
 
 export const Carts = () => {
   const { isOpen, handleOpenCart } = cartStore((state) => state);
@@ -82,6 +83,7 @@ const CartList = ({ carts, user }) => {
 const CartItem = React.memo(({ cart, uid }) => {
   const [data, setData] = useState({});
   const cartRef = doc(collection(db, "carts"), uid);
+  const navigate = useNavigate();
   const handleDeleteItem = () => {
     const { id } = data;
 
@@ -95,6 +97,9 @@ const CartItem = React.memo(({ cart, uid }) => {
 
       setDoc(cartRef, { items });
     });
+  };
+  const handleNavigate = () => {
+    navigate(`/product/${data.id}`);
   };
 
   useEffect(() => {
@@ -113,7 +118,10 @@ const CartItem = React.memo(({ cart, uid }) => {
     <div className="grid grid-cols-2 gap-2 w-full">
       {data && (
         <>
-          <div className="overflow-hidden aspect-square rounded flex-shrink-0">
+          <div
+            className="overflow-hidden aspect-square rounded flex-shrink-0 cursor-pointer"
+            onClick={handleNavigate}
+          >
             {data?.images?.length > 0 && (
               <img
                 src={data?.images[0]}
@@ -124,7 +132,10 @@ const CartItem = React.memo(({ cart, uid }) => {
           </div>
           <div className="flex flex-col gap-1">
             <div className="flex items-center justify-between">
-              <p className="font-semibold text-sm line-clamp-1 flex-1">
+              <p
+                className="font-semibold text-sm line-clamp-1 flex-1 cursor-pointer"
+                onClick={handleNavigate}
+              >
                 {data.name}
               </p>
               <button

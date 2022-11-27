@@ -9,9 +9,15 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper";
+import banner1 from "../../images/banner (1).jpg";
+import banner2 from "../../images/banner (2).jpg";
+import banner3 from "../../images/banner (3).jpg";
+import banner4 from "../../images/banner (4).jpg";
+
+const slideImage = [banner1, banner2, banner3, banner4];
 
 const Home = () => {
-  const colRef = query(collection(db, "products"), limit(6));
+  const colRef = query(collection(db, "products"), limit(8));
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -38,15 +44,16 @@ const Home = () => {
             modules={[Pagination, Navigation, Autoplay]}
             className="w-full flex h-[60vh]"
             autoplay={{
-              delay: 1500,
+              delay: 2300,
               disableOnInteraction: false,
             }}
+            loop={true}
           >
-            {products?.length > 0 &&
-              products.map((product) => (
-                <SwiperSlide key={product.id}>
+            {slideImage?.length > 0 &&
+              slideImage.map((img) => (
+                <SwiperSlide key={img}>
                   <img
-                    src={product.images[0]}
+                    src={img}
                     alt=""
                     className="w-full h-full object-cover"
                   />

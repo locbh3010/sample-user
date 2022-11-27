@@ -26,8 +26,7 @@ export const userStore = create((set) => ({
           if (data.password === password) {
             const currentUser = {
               id: doc.id,
-              email: data.email,
-              password: data.password,
+              ...data,
             };
             sessionStorage.setItem("user", JSON.stringify(currentUser));
             set({ user: currentUser });

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { cartStore } from "../../store/cart-store";
 import { userStore } from "../../store/user-store";
 import SearchIcon from "../icon/SearchIcon";
@@ -14,6 +14,7 @@ const Nav = () => {
 
   const handleSignOut = () => {
     signOut();
+    navigate("/");
   };
 
   const handleClickButtonCart = () => {
@@ -25,7 +26,7 @@ const Nav = () => {
   };
 
   return (
-    <div className="w-full sticky top-0 left-0 z-50 bg-white/80 mb-4 py-4 backdrop-blur-sm">
+    <div className="w-full sticky top-0 left-0 z-50 bg-white/80 mb-4 backdrop-blur-sm">
       <div className="container">
         <div className="flex items-center justify-between">
           <Link
@@ -35,10 +36,39 @@ const Nav = () => {
             GoldenBees
           </Link>
           <div className="flex items-center gap-16 capitalize font-medium">
-            <Link to="/shop">Shop</Link>
-            <Link to="/orders">Order</Link>
-            <Link to="/blogs">Blog</Link>
-            <Link>
+            <div className="flex items-center">
+              <NavLink
+                to="/shop"
+                className={({ isActive }) =>
+                  isActive
+                    ? "border-b-blue-500 px-8 border-b-2 py-8 duration-300"
+                    : "border-b-transparent px-8 border-b-2 py-8 duration-300"
+                }
+              >
+                Shop
+              </NavLink>
+              <NavLink
+                to="/orders"
+                className={({ isActive }) =>
+                  isActive
+                    ? "border-b-blue-500 px-8 border-b-2 py-8 duration-300"
+                    : "border-b-transparent px-8 border-b-2 py-8 duration-300"
+                }
+              >
+                Order
+              </NavLink>
+              <NavLink
+                to="/blogs"
+                className={({ isActive }) =>
+                  isActive
+                    ? "border-b-blue-500 px-8 border-b-2 py-8 duration-300"
+                    : "border-b-transparent px-8 border-b-2 py-8 duration-300"
+                }
+              >
+                Blog
+              </NavLink>
+            </div>
+            <Link to="/shop">
               <SearchIcon></SearchIcon>
             </Link>
             <button className="toggle-cart" onClick={handleClickButtonCart}>
@@ -50,13 +80,16 @@ const Nav = () => {
               </Link>
             ) : (
               <div className="flex items-center gap-4">
-                <div className="rounded-full w-12 h-12 overflow-hidden bg-black flex-shrink-0">
+                <Link
+                  to="/account"
+                  className="rounded-full w-12 h-12 overflow-hidden bg-black flex-shrink-0"
+                >
                   <img
-                    src="https://fuziondigital.co.za/wp-content/uploads/Screenshot-2021-06-21-at-12-13-34-Default-Placeholder-Avatar-Profile-On-Gray-Background-Man-And-Woman-1.png"
+                    src={user.avatar}
                     alt=""
                     className="w-full h-full object-cover"
                   />
-                </div>
+                </Link>
                 <Button
                   type="secondary"
                   style={{ paddingInline: "16px" }}

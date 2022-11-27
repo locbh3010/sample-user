@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const BlogItem = () => {
+export const BlogItem = ({ blog }) => {
   const navigate = useNavigate();
+  const description = useRef(null);
+
+  useEffect(() => {
+    description.current.textContent = "";
+    description.current.insertAdjacentHTML("beforeend", blog.description);
+  }, [blog]);
 
   const handleNavigate = () => {
-    navigate("/blog/129807flds");
+    navigate("/blog/" + blog.id);
   };
   return (
     <div className="flex flex-col group gap-5.5">
@@ -14,27 +20,25 @@ export const BlogItem = () => {
         onClick={handleNavigate}
       >
         <img
-          src="https://i.pinimg.com/564x/ab/50/40/ab5040a1dd86289dd175ab4dce78d598.jpg"
+          src={blog.image}
           alt=""
           className="w-full h-full object-cover duration-300 group-hover:scale-125"
         />
       </div>
       <div className="flex flex-col flex-1">
         <span className="block text-gray-dark text-sm capitalize">
-          Fashion - October 8, 2020
+          {blog.categories} - {blog.createAt.toDate().toDateString()}
         </span>
         <p
           className="mt-1 mb-3.5 capitalize text-xl line-clamp-2 text-black cursor-pointer"
           onClick={handleNavigate}
         >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, ab.
+          {blog.name}
         </p>
-        <span className="text-gray-dark mb-6 line-clamp-2 mt-auto">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Praesentium
-          ratione maxime fugiat tempore atque at. Lorem, ipsum dolor sit amet
-          consectetur adipisicing elit. Ullam iste cum ipsum! Incidunt voluptate
-          id dicta cum iusto provident alias?
-        </span>
+        <span
+          className="text-gray-dark mb-6 line-clamp-2 mt-auto"
+          ref={description}
+        ></span>
 
         <span
           className="mt-auto text-accent capitalize font-bold cursor-pointer"

@@ -3,18 +3,6 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import { Carts } from "./components/ui/cart/Cart";
 import { cartStore } from "./store/cart-store";
-// import ForgotPassword from "./pages/account/ForgotPassword";
-// import Register from "./pages/account/Register";
-// import SignIn from "./pages/account/SignIn";
-// import Blog from "./pages/blog/Blog";
-// import Blogs from "./pages/blog/Blogs";
-// import CartPage from "./pages/cart/CartPage";
-// import Home from "./pages/home/Home";
-// import OrderPreview from "./pages/order/OrderPreview";
-// import Orders from "./pages/order/Orders";
-// import OrderSumary from "./pages/order/OrderSumary";
-// import ProductDetail from "./pages/product/ProductDetail";
-// import Shop from "./pages/shop/Shop";
 import { userStore } from "./store/user-store";
 
 const Home = lazy(() => import("./pages/home/Home"));
@@ -29,6 +17,8 @@ const SignIn = lazy(() => import("./pages/account/SignIn"));
 const Blog = lazy(() => import("./pages/blog/Blog"));
 const Blogs = lazy(() => import("./pages/blog/Blogs"));
 const CartPage = lazy(() => import("./pages/cart/CartPage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const MyAccount = lazy(() => import("./pages/account/MyAccount"));
 
 const Loading = () => {
   return (
@@ -57,8 +47,10 @@ const Loading = () => {
 };
 const ScrollToTop = ({ children }) => {
   const location = useLocation();
+  const handleOpenCart = cartStore((state) => state.handleOpenCart);
 
   useEffect(() => {
+    handleOpenCart(false);
     window.scrollTo(0, 0);
   }, [location]);
   return <div>{children}</div>;
@@ -69,7 +61,7 @@ const App = () => {
   return (
     <>
       <ScrollToTop>
-        <Carts />
+        {user && <Carts />}
         <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/" element={<Layout />}>
@@ -108,7 +100,14 @@ const App = () => {
                   !user ? <Navigate to="/sign-in"></Navigate> : <CartPage />
                 }
               ></Route>
+              <Route
+                path="/account"
+                element={
+                  !user ? <Navigate to="/sign-in"></Navigate> : <MyAccount />
+                }
+              ></Route>
             </Route>
+            <Route path="*" element={<NotFound />}></Route>
           </Routes>
         </Suspense>
       </ScrollToTop>

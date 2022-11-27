@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   collection,
   doc,
   documentId,
   getDoc,
   getDocs,
-  onSnapshot,
+  limit,
   query,
   setDoc,
   where,
@@ -22,6 +22,7 @@ import { Pagination, Navigation, Autoplay } from "swiper";
 import Button from "../../components/ui/button/Button";
 import { userStore } from "../../store/user-store";
 import { toast } from "react-toastify";
+import Comment, { CommentShow } from "../../components/ui/comment/Comment";
 
 const notifySuccess = () => {
   toast.success("Thêm vào giỏ hàng thành công");
@@ -43,6 +44,7 @@ const ProductDetail = () => {
   useEffect(() => {
     getDoc(productRef).then((res) => {
       setProduct({ id: res.id, ...res.data() });
+      !res.data() && navigate("/not-found");
     });
   }, [id]);
   useEffect(() => {
@@ -50,7 +52,8 @@ const ProductDetail = () => {
       const similarRef = query(
         colRef,
         where("cateId", "==", product.cateId),
-        where(documentId(), "!=", id)
+        where(documentId(), "!=", id),
+        limit(3)
       );
 
       getDocs(similarRef).then((res) => {
@@ -77,7 +80,8 @@ const ProductDetail = () => {
   }, [product]);
 
   const handleAddToCart = useCallback(() => {
-    if (user) {
+    console.log(product.count);
+    if (user && product.count !== 0) {
       const uid = user.id;
       const pid = product.id;
       const cartRef = collection(db, "carts");
@@ -111,9 +115,9 @@ const ProductDetail = () => {
           setDoc(cart, data).then(notifySuccess);
         }
       });
-    } else {
+    } else if (!user) {
       navigate("/sign-in");
-    }
+    } else if (!product.count) toast.error("Đã hết sản phẩm");
   }, [amount, product]);
   const handleActionAmount = (e) => {
     const type = e.target.dataset.type;
@@ -141,7 +145,7 @@ const ProductDetail = () => {
     <div className="mt-[128px] mb-[250px]">
       <div className="container">
         <div className="grid grid-cols-2 gap-16">
-          <div className="aspect-square overflow-hidden border border-gray-300">
+          <div className="aspect-[16/10] overflow-hidden border border-gray-300">
             <Swiper
               pagination={{
                 type: "progressbar",
@@ -230,6 +234,11 @@ const ProductDetail = () => {
                 <ProductItem key={similar.id} data={similar} />
               ))}
           </ProductList>
+        </div>
+
+        <div className="pt-20">
+          <CommentShow></CommentShow>
+          <Comment />
         </div>
       </div>
     </div>
