@@ -1,6 +1,7 @@
 import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import CloseIcon from "../../components/icon/CloseIcon";
 import Button from "../../components/ui/button/Button";
 import { db } from "../../configs/firebase-configs";
@@ -10,6 +11,7 @@ const CartPage = () => {
   const [carts, setCarts] = useState([]);
   const { user } = userStore((state) => state);
   const [total, setTotal] = useState(0);
+  const navigate = useNavigate();
   const CartItem = ({ data }) => {
     const [product, setProduct] = useState({});
 
@@ -63,6 +65,7 @@ const CartPage = () => {
       const cart = doc(collection(db, "carts"), user.id);
       onSnapshot(cart, (res) => {
         if (res.data()?.items?.length > 0) setCarts(res.data().items);
+        else setCarts([]);
       });
     }
   }, [user]);
@@ -75,6 +78,13 @@ const CartPage = () => {
 
     setTotal(total_);
   }, [carts]);
+  const handleNavigate = () => {
+    if (carts?.length > 0) {
+      navigate("/sumary");
+    } else {
+      toast.error("You have no products in your shopping cart");
+    }
+  };
   return (
     <div className="py-24 pb-[250px]">
       <div className="container">
@@ -86,7 +96,7 @@ const CartPage = () => {
             total ({carts.length} Item): ${total}
           </div>
           <Button type="secondary">
-            <Link to="/sumary">PROCEED TO CHECKOUT</Link>
+            <span onClick={handleNavigate}>PROCEED TO CHECKOUT</span>
           </Button>
         </div>
         <div className="max-w-4xl mx-auto grid grid-cols-1 grid-flow-row auto-rows-fr gap-10">

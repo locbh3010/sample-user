@@ -55,8 +55,8 @@ const Shop = () => {
     const handleStickyFilter = () => {
       const scrollY = window.scrollY;
       scrollY > 150
-        ? filterRef.current.classList.add("translate-y-24")
-        : filterRef.current.classList.remove("translate-y-24");
+        ? filterRef.current?.classList.add("translate-y-24")
+        : filterRef.current?.classList.remove("translate-y-24");
     };
 
     onSnapshot(cateRef, (res) => {

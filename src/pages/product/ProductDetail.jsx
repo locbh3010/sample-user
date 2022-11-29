@@ -80,7 +80,6 @@ const ProductDetail = () => {
   }, [product]);
 
   const handleAddToCart = useCallback(() => {
-    console.log(product.count);
     if (user && product.count !== 0) {
       const uid = user.id;
       const pid = product.id;

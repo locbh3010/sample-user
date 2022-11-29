@@ -4,9 +4,14 @@ import { cartStore } from "../../../store/cart-store";
 import CloseIcon from "../../icon/CloseIcon";
 import Button from "../button/Button";
 import { userStore } from "../../../store/user-store";
-import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "../../../configs/firebase-configs";
-import { applyActionCode } from "firebase/auth";
 
 export const Carts = () => {
   const { isOpen, handleOpenCart } = cartStore((state) => state);
@@ -21,10 +26,14 @@ export const Carts = () => {
     if (user) {
       const cart = doc(collection(db, "carts"), user.id);
       onSnapshot(cart, (res) => {
-        if (res.data()?.items?.length > 0) setCarts(res.data().items);
+        if (res.data()?.items?.length > 0) {
+          setCarts(res.data().items);
+        } else {
+          setCarts([]);
+        }
       });
     }
-  }, [user]);
+  }, []);
   useEffect(() => {
     let total_ = 0;
     carts?.length > 0 &&
@@ -52,11 +61,16 @@ export const Carts = () => {
           <div className="flex-shrink-0 w-full top-0 left-0 bg-white border-b border-gray-400 px-9 pt-[72px]">
             <p className="font-semibold mb-4">Shopping bag</p>
           </div>
-          {carts?.length > 0 && <CartList carts={carts} user={user} />}
+          <div className="flex-1 px-7 py-8 overflow-y-scroll gap-7 flex flex-col">
+            {carts?.length > 0 &&
+              carts.map((cart) => (
+                <CartItem key={cart.pid} cart={cart} uid={user.id} />
+              ))}
+          </div>
 
           <div className="flex-shrink-0 w-full bottom-0 left-0 border-t border-gray-400 py-7 px-9 bg-white mt-auto">
             <div className="flex items-center justify-between font-medium mb-5">
-              <span>Subtotal ({carts.length})</span>
+              <span>Subtotal ({carts?.length})</span>
               <span>$ {total}</span>
             </div>
             <Link to="/cart">
@@ -69,17 +83,6 @@ export const Carts = () => {
   );
 };
 
-const CartList = ({ carts, user }) => {
-  return (
-    <div className="flex-1 px-7 py-8 overflow-y-scroll gap-7 flex flex-col">
-      {carts?.length > 0 &&
-        carts.map((cart) => (
-          <CartItem key={cart.pid} cart={cart} uid={user.id} />
-        ))}
-    </div>
-  );
-};
-
 const CartItem = React.memo(({ cart, uid }) => {
   const [data, setData] = useState({});
   const cartRef = doc(collection(db, "carts"), uid);
@@ -87,15 +90,20 @@ const CartItem = React.memo(({ cart, uid }) => {
   const handleDeleteItem = () => {
     const { id } = data;
 
-    onSnapshot(cartRef, (res) => {
-      const items = res.data().items;
-      const index = items.findIndex((obj) => {
-        return obj.pid === id;
-      });
+    getDoc(cartRef).then((res) => {
+      if (res.data()) {
+        const items = res.data().items;
 
-      items.splice(index, 1);
+        if (items.length > 0) {
+          const index = items.findIndex((obj) => {
+            return obj.pid === id;
+          });
 
-      setDoc(cartRef, { items });
+          items.splice(index, 1);
+
+          setDoc(cartRef, { items });
+        }
+      }
     });
   };
   const handleNavigate = () => {
@@ -112,7 +120,7 @@ const CartItem = React.memo(({ cart, uid }) => {
         ...res.data(),
       });
     });
-  }, [cart]);
+  }, []);
 
   return (
     <div className="grid grid-cols-2 gap-2 w-full">

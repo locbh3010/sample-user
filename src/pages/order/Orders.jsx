@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  query,
-  where,
-  collection,
-  onSnapshot,
-  Timestamp,
-} from "firebase/firestore";
+import { query, where, collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../configs/firebase-configs";
 import { userStore } from "../../store/user-store";
 
@@ -54,6 +48,7 @@ const Orders = () => {
   return (
     <div className="pt-24 pb-[250px]">
       <div className="container">
+        <h1 className="text-4xl mb-10 text-gray-dark capitalize">My Order</h1>
         <div className="overflow-x-auto relative">
           <table className="w-full text-sm text-left text-gray-500 ">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50">
