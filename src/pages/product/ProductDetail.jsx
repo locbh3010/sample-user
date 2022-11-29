@@ -7,6 +7,7 @@ import {
   getDoc,
   getDocs,
   limit,
+  onSnapshot,
   query,
   setDoc,
   where,
@@ -139,6 +140,46 @@ const ProductDetail = () => {
         break;
     }
   };
+  const handleFavoriteClick = () => {
+    const favoriteRef = doc(collection(db, "favorites"), user.id);
+    getDoc(favoriteRef).then((res) => {
+      if (res.data()?.items) {
+        const { items } = res.data();
+        if (items.length > 0) {
+          const index = items.findIndex((obj) => {
+            return obj.id === productRef.id;
+          });
+          if (index === -1) {
+            items.unshift(productRef);
+            setDoc(favoriteRef, { items }).then(() => {
+              toast.success("Add to favorite success");
+              return;
+            });
+          } else {
+            items.splice(index, 1);
+            setDoc(favoriteRef, { items }).then((res) => {
+              toast.success("removed from favorites");
+            });
+            return;
+          }
+        } else {
+          items.push(productRef);
+          setDoc(favoriteRef, { items }).then(() => {
+            toast.success("Add to favorite success");
+            return;
+          });
+        }
+      } else {
+        const data = {
+          items: [productRef],
+        };
+        setDoc(favoriteRef, data).then(() => {
+          toast.success("Add to favorite success");
+          return;
+        });
+      }
+    });
+  };
 
   return (
     <div className="mt-[128px] mb-[250px]">
@@ -174,8 +215,15 @@ const ProductDetail = () => {
           </div>
           <div>
             <h1 className="text-3xl text-black mb-6 font-medium">
-              {product?.name}
+              {product?.name} -{" "}
+              <button
+                className="inline-block bg-blue-500/30 text-blue-500 rounded px-3 py-4 text-sm font-bold"
+                onClick={handleFavoriteClick}
+              >
+                Favorite
+              </button>
             </h1>
+
             <span className="block text-accent font-medium text-xl">
               ${product?.price}
             </span>
@@ -205,9 +253,10 @@ const ProductDetail = () => {
               </div>
               <Button onClick={handleAddToCart}>add to cart</Button>
             </div>
-            <div className="mt-16 flex flex-col gap-2">
+
+            <div className="mt-10 flex flex-col gap-2">
               <p className="text-black font-medium">
-                SKU: <span className="text-gray-dark">{product?.count}</span>
+                Amount: <span className="text-gray-dark">{product?.count}</span>
               </p>
               <p className="text-black font-medium">
                 Categories:{" "}
