@@ -100,7 +100,8 @@ export const CommentShow = () => {
     }, [comment]);
 
     const handleRemoveComment = () => {
-      const deleteRef = doc(collection(db, "comments"), comment.id);
+      const deleteRef = doc(collection(db, "comments"), id);
+
       deleteDoc(deleteRef).then(() => {
         toast.success("Xóa bình luận thành công");
       });
