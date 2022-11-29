@@ -58,15 +58,15 @@ const MyAccount = () => {
             </button>
           </div>
         </div>
-
-        {location.pathname === "/account" ? (
-          <ProfileDetail />
-        ) : location.pathname === "/address" ? (
-          <AddressShipping />
-        ) : (
-          location.pathname === "/favorites" && <Favorites />
-        )}
       </div>
+
+      {location.pathname === "/account" ? (
+        <ProfileDetail />
+      ) : location.pathname === "/address" ? (
+        <AddressShipping />
+      ) : (
+        location.pathname === "/favorites" && <Favorites />
+      )}
     </div>
   );
 };
