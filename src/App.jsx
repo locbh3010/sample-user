@@ -106,6 +106,18 @@ const App = () => {
                   !user ? <Navigate to="/sign-in"></Navigate> : <MyAccount />
                 }
               ></Route>
+              <Route
+                path="/address"
+                element={
+                  !user ? <Navigate to="/sign-in"></Navigate> : <MyAccount />
+                }
+              ></Route>
+              <Route
+                path="/favorites"
+                element={
+                  !user ? <Navigate to="/sign-in"></Navigate> : <MyAccount />
+                }
+              ></Route>
             </Route>
             <Route path="*" element={<NotFound />}></Route>
           </Routes>

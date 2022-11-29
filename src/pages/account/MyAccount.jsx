@@ -1,6 +1,9 @@
 import React from "react";
-import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { userStore } from "../../store/user-store";
+import AddressShipping from "./AddressShipping";
+import Favorites from "./Favorites";
+import ProfileDetail from "./ProfileDetail";
 
 const classNameTabNonActive =
   "flex items-center px-5 py-3 font-medium border-b-2 cursor-pointer duration-300 gap-x-2 text-gray-500 border-b-transparent hover:border-b-blue-500 hover:text-blue-500";
@@ -9,11 +12,12 @@ const classNameTabIsActive =
 const MyAccount = () => {
   const { signOut } = userStore((state) => state);
   const navigate = useNavigate();
-  const [searchParam] = useSearchParams();
+  const location = useLocation();
   const handleLogOut = () => {
     signOut();
     navigate("/");
   };
+
   return (
     <div className="py-20 pt-16">
       <div className="container">
@@ -24,23 +28,27 @@ const MyAccount = () => {
           >
             <NavLink
               to="/account"
-              className={
-                searchParam.get("address")
-                  ? classNameTabNonActive
-                  : classNameTabIsActive
+              className={({ isActive }) =>
+                isActive ? classNameTabIsActive : classNameTabNonActive
               }
             >
               Profile detail
             </NavLink>
             <NavLink
-              to="/account?address=true"
-              className={
-                !searchParam.get("address")
-                  ? classNameTabNonActive
-                  : classNameTabIsActive
+              to="/address"
+              className={({ isActive }) =>
+                isActive ? classNameTabIsActive : classNameTabNonActive
               }
             >
-              Address shipping
+              Address Shipping
+            </NavLink>
+            <NavLink
+              to="/favorites"
+              className={({ isActive }) =>
+                isActive ? classNameTabIsActive : classNameTabNonActive
+              }
+            >
+              Favorites
             </NavLink>
             <button
               className="rounded-lg font-medium bg-blue-100 text-blue-500 px-6 py-3"
@@ -50,7 +58,14 @@ const MyAccount = () => {
             </button>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4"></div>
+
+        {location.pathname === "/account" ? (
+          <ProfileDetail />
+        ) : location.pathname === "/address" ? (
+          <AddressShipping />
+        ) : (
+          location.pathname === "/favorites" && <Favorites />
+        )}
       </div>
     </div>
   );
