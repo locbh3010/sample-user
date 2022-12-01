@@ -65,7 +65,9 @@ const Register = () => {
             </div>
 
             <div className="mt-17">
-              <Button type="secondary">register</Button>
+              <Button type="secondary" typeButton="submit">
+                register
+              </Button>
             </div>
             <NavLink
               to="/forgot-password"

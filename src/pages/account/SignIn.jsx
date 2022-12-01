@@ -1,28 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import Button from "../../components/ui/button/Button";
 import Checkbox from "../../components/ui/input/Checkbox";
 import Input from "../../components/ui/input/Input";
 import { userStore } from "../../store/user-store";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
+
+const schema = yup.object().shape();
 
 const SignIn = () => {
-  const { control, handleSubmit } = useForm({
-    mode: onchange,
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(schema),
   });
   const navigate = useNavigate();
-  const { signIn, user } = userStore((state) => state);
+  const { signIn } = userStore((state) => state);
   const handleSignIn = (value) => {
-    signIn(value.email, value.password, () => {
-      navigate("/");
-    });
-
-    // signInWithEmailAndPassword(auth, value.email, value.password).then(
-    //   (res) => {
-    //     navigate("/");
-    //   }
-    // );
+    if (Object.values(errors).length === 0) {
+      signIn(value.email, value.password, () => {
+        navigate("/");
+      });
+    } else toast.error(Object.values(errors)[0]);
   };
+
+  useEffect(() => {
+    const errList = Object.values(errors);
+
+    if (errList.length > 0) {
+      toast.error(errList[0]);
+    }
+  }, [errors]);
 
   return (
     <div className="pt-32 pb-[250px]">
@@ -69,7 +83,9 @@ const SignIn = () => {
             <Checkbox name="remember" display="Remember me" />
 
             <div className="mt-17">
-              <Button type="secondary">SIGN IN</Button>
+              <Button type="secondary" typeButton="submit">
+                SIGN IN
+              </Button>
             </div>
           </form>
 

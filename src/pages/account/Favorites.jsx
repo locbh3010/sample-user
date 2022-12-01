@@ -16,7 +16,6 @@ const Item = ({ data }) => {
   const user = userStore((state) => state.user);
   const { id } = data;
   const navigate = useNavigate();
-  console.log(data);
 
   useEffect(() => {
     onSnapshot(data, (res) => {

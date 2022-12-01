@@ -6,11 +6,16 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { toast } from "react-toastify";
 import create from "zustand";
 import { db } from "../configs/firebase-configs";
 
 export const userStore = create((set) => ({
   user: JSON.parse(sessionStorage.getItem("user")) || null,
+  setUser: (currentUser) => {
+    set({ user: currentUser });
+    sessionStorage.setItem("user", JSON.stringify(currentUser));
+  },
   signOut: () => {
     sessionStorage.removeItem("user");
     set({ user: null });
@@ -30,8 +35,11 @@ export const userStore = create((set) => ({
             };
             sessionStorage.setItem("user", JSON.stringify(currentUser));
             set({ user: currentUser });
-          }
+            callback();
+          } else toast.error("Email or Password is wrong");
         });
+
+      if (res.docs.length === 0 || !res.docs) toast.error("Email not found");
     });
   },
   signUp: async (currentUser, callback = () => {}) => {
