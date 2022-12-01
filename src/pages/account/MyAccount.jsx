@@ -34,14 +34,14 @@ const MyAccount = () => {
             >
               Profile detail
             </NavLink>
-            <NavLink
+            {/* <NavLink
               to="/address"
               className={({ isActive }) =>
                 isActive ? classNameTabIsActive : classNameTabNonActive
               }
             >
               Address Shipping
-            </NavLink>
+            </NavLink> */}
             <NavLink
               to="/favorites"
               className={({ isActive }) =>

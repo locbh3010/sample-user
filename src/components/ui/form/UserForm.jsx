@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { NavLink, useSearchParams } from "react-router-dom";
+import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import { db } from "../../../configs/firebase-configs";
 import { userStore } from "../../../store/user-store";
 import Button from "../button/Button";
@@ -33,6 +33,7 @@ const schema = yup.object().shape({
     .required(),
 });
 const UserForm = () => {
+  const navigate = useNavigate();
   const userCol = collection(db, "users");
   const {
     control,
@@ -106,6 +107,13 @@ const UserForm = () => {
     user.password = newPass;
     updateDoc(userRef, user);
     setUser(user);
+    setChangePass({
+      oldPass: null,
+      newPass: null,
+      confirmPass: null,
+    });
+    toast.success("Update password success");
+    navigate("/account");
   };
 
   useEffect(() => {

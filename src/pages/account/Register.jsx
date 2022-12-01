@@ -1,20 +1,63 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import Button from "../../components/ui/button/Button";
 import Input from "../../components/ui/input/Input";
 import { userStore } from "../../store/user-store";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
+import {
+  addDoc,
+  collection,
+  getCountFromServer,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../../configs/firebase-configs";
 
+const schema = yup.object().shape({
+  fullname: yup.string().required().max(30).min(3),
+  email: yup.string().email().required(),
+  password: yup.string().min(1).max(16).required(),
+});
 const Register = () => {
-  const { control, handleSubmit } = useForm();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(schema),
+  });
   const navigate = useNavigate();
-  const { signUp } = userStore((state) => state);
+  const { setUser } = userStore((state) => state);
 
-  const handleCreateUser = (value) => {
-    signUp(value, () => {
-      navigate("/");
-    });
+  const handleCreateUser = async (value) => {
+    const { email } = value;
+    const userCol = collection(db, "users");
+    const query_ = query(userCol, where("email", "==", email));
+    const count = await getCountFromServer(query_);
+
+    if (count.data().count) {
+      toast.error("This email already exists");
+    } else {
+      addDoc(userCol, value).then((res) => {
+        const currentUser = {
+          id: res.id,
+          ...value,
+        };
+        setUser(currentUser);
+        navigate("/");
+      });
+    }
   };
+
+  useEffect(() => {
+    const errList = Object.values(errors);
+
+    if (errList.length > 0) toast.error(errList[0].message);
+  }, [errors]);
   return (
     <div className="pt-32 pb-[250px]">
       <div className="container">

@@ -23,7 +23,7 @@ export const Carts = () => {
   const [carts, setCarts] = useState([]);
 
   useEffect(() => {
-    if (user) {
+    if (user.id) {
       const cart = doc(collection(db, "carts"), user.id);
       onSnapshot(cart, (res) => {
         if (res.data()?.items?.length > 0) {

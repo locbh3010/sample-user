@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import Button from "../../components/ui/button/Button";
 import Checkbox from "../../components/ui/input/Checkbox";
 import Input from "../../components/ui/input/Input";
@@ -8,8 +8,13 @@ import { userStore } from "../../store/user-store";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { db } from "../../configs/firebase-configs";
 
-const schema = yup.object().shape();
+const schema = yup.object().shape({
+  email: yup.string().required(),
+  password: yup.string().required(),
+});
 
 const SignIn = () => {
   const {
@@ -21,20 +26,42 @@ const SignIn = () => {
     resolver: yupResolver(schema),
   });
   const navigate = useNavigate();
-  const { signIn } = userStore((state) => state);
-  const handleSignIn = (value) => {
-    if (Object.values(errors).length === 0) {
-      signIn(value.email, value.password, () => {
-        navigate("/");
-      });
-    } else toast.error(Object.values(errors)[0]);
+  const { setUser } = userStore((state) => state);
+  const handleSignIn = (val) => {
+    const { email, password } = val;
+    const docRef = query(collection(db, "users"), where("email", "==", email));
+
+    onSnapshot(docRef, (res) => {
+      if (res.docs.length > 0) {
+        res.docs.map((doc) => {
+          const data = doc.data();
+
+          if (data.password === password) {
+            const currentUser = {
+              id: doc.id,
+              ...data,
+            };
+
+            setUser(currentUser);
+            navigate("/");
+            return;
+          } else {
+            toast.error("Email or Password is wrong");
+          }
+        });
+      } else {
+        toast.error("Email not found");
+        return;
+      }
+    });
+
+    return;
   };
 
   useEffect(() => {
-    const errList = Object.values(errors);
-
-    if (errList.length > 0) {
-      toast.error(errList[0]);
+    if (Object.values(errors).length > 0) {
+      toast.error(Object.values(errors)[0].message);
+      return;
     }
   }, [errors]);
 
