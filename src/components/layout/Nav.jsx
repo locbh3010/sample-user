@@ -57,7 +57,7 @@ const Nav = () => {
               >
                 Order
               </NavLink>
-              <NavLink
+              {/* <NavLink
                 to="/blogs"
                 className={({ isActive }) =>
                   isActive
@@ -66,7 +66,7 @@ const Nav = () => {
                 }
               >
                 Blog
-              </NavLink>
+              </NavLink> */}
             </div>
             <Link to="/shop">
               <SearchIcon></SearchIcon>

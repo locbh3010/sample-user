@@ -19,9 +19,12 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-
-const phoneRegExp =
-  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+import {
+  nameRegExp,
+  phoneRegExp,
+  titleCase,
+  passwordRegExp,
+} from "../../../utils/function";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -31,6 +34,7 @@ const schema = yup.object().shape({
     .min(10)
     .max(11)
     .required(),
+  fullname: yup.string().matches(nameRegExp, "Name is not valid").required(),
 });
 const UserForm = () => {
   const navigate = useNavigate();
@@ -56,6 +60,9 @@ const UserForm = () => {
     confirmPass: null,
   });
   const handleUpdateUser = async (value) => {
+    value.fullname = value.fullname.replace(/\s\s+/g, " ");
+    value.fullname = titleCase(value.fullname);
+
     const emailRef = query(
       userCol,
       where("email", "==", value.email),
@@ -88,7 +95,6 @@ const UserForm = () => {
   const handleUpdatePassword = (e) => {
     e.preventDefault();
     const { oldPass, newPass, confirmPass } = changePass;
-
     if (oldPass !== user.password) {
       toast.error("Wrong password");
       return;
@@ -107,11 +113,6 @@ const UserForm = () => {
     user.password = newPass;
     updateDoc(userRef, user);
     setUser(user);
-    setChangePass({
-      oldPass: null,
-      newPass: null,
-      confirmPass: null,
-    });
     toast.success("Update password success");
     navigate("/account");
   };
@@ -212,6 +213,8 @@ const UserForm = () => {
             className="w-full border border-slate-200 rounded-lg py-3 px-5 outline-none  bg-transparent"
             data-type="newPass"
             onChange={handleInputChange}
+            min="6"
+            max="16"
             required
           />
           <input
@@ -220,6 +223,8 @@ const UserForm = () => {
             className="w-full border border-slate-200 rounded-lg py-3 px-5 outline-none  bg-transparent"
             data-type="confirmPass"
             onChange={handleInputChange}
+            min="6"
+            max="16"
             required
           />
           <Button typeButton="submit" type="secondary">

@@ -15,9 +15,15 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../configs/firebase-configs";
+import { nameRegExp, titleCase } from "../../utils/function";
 
 const schema = yup.object().shape({
-  fullname: yup.string().required().max(30).min(3),
+  fullname: yup
+    .string()
+    .required()
+    .matches(nameRegExp, "Name is not valid")
+    .max(30)
+    .min(3),
   email: yup.string().email().required(),
   password: yup.string().min(1).max(16).required(),
 });
@@ -38,7 +44,8 @@ const Register = () => {
     const userCol = collection(db, "users");
     const query_ = query(userCol, where("email", "==", email));
     const count = await getCountFromServer(query_);
-
+    value.fullname = value.fullname.replace(/\s\s+/g, " ");
+    value.fullname = titleCase(value.fullname);
     if (count.data().count) {
       toast.error("This email already exists");
     } else {

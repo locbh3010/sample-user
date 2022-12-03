@@ -46,11 +46,11 @@ const SignIn = () => {
             navigate("/");
             return;
           } else {
-            toast.error("Email or Password is wrong");
+            toast.error("Password is wrong");
           }
         });
       } else {
-        toast.error("Email not found");
+        toast.error("Email is wrong");
         return;
       }
     });
