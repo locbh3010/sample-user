@@ -28,6 +28,15 @@
     @apply flex items-center justify-center;
   }
 }
+#toggle-dropdown + .dropdown-list {
+  opacity: 0;
+  visibility: hidden;
+}
+#toggle-dropdown:checked + .dropdown-list {
+  opacity: 100;
+  visibility: visible;
+}
+
 .cont_principal {
   position: absolute;
   width: 100%;

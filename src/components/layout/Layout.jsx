@@ -1,7 +1,6 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
-import CloseIcon from "../icon/CloseIcon";
-import Button from "../ui/button/Button";
+import { Outlet } from "react-router-dom";
+import BottomNav from "./BottomNav";
 import Footer from "./Footer";
 import Nav from "./Nav";
 
@@ -11,6 +10,7 @@ const Layout = () => {
       <Nav></Nav>
       <Outlet />
       <Footer />
+      <BottomNav></BottomNav>
     </div>
   );
 };

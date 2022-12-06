@@ -13,6 +13,7 @@ import banner1 from "../../images/banner (1).jpg";
 import banner2 from "../../images/banner (2).jpg";
 import banner3 from "../../images/banner (3).jpg";
 import banner4 from "../../images/banner (4).jpg";
+import Tooltip from "../../components/ui/Tooltip";
 
 const slideImage = [banner1, banner2, banner3, banner4];
 
@@ -75,12 +76,14 @@ const Home = () => {
       <div className="container mt-16 mb-[250px]">
         <div className="flex items-center justify-between mb-10">
           <h2 className="font-medium text-3xl">Shop The Latest</h2>
-          <Link
-            className="capitalize text-xl font-medium text-accent"
-            to="/shop"
-          >
-            View All
-          </Link>
+          <Tooltip tip="Go to shop">
+            <Link
+              className="capitalize text-xl font-medium text-accent"
+              to="/shop"
+            >
+              View All
+            </Link>
+          </Tooltip>
         </div>
         <ProductList>
           {products?.length > 0 &&

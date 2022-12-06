@@ -1,8 +1,8 @@
 import React, { lazy, Suspense, useEffect } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Layout from "./components/layout/Layout";
+import MobileNav from "./components/layout/MobileNav";
 import { Carts } from "./components/ui/cart/Cart";
-import { cartStore } from "./store/cart-store";
 import { userStore } from "./store/user-store";
 
 const Home = lazy(() => import("./pages/home/Home"));
@@ -45,84 +45,113 @@ const Loading = () => {
     </div>
   );
 };
-const ScrollToTop = ({ children }) => {
-  const location = useLocation();
-  const handleOpenCart = cartStore((state) => state.handleOpenCart);
 
-  useEffect(() => {
-    handleOpenCart(false);
-    window.scrollTo(0, 0);
-  }, [location]);
-  return <div>{children}</div>;
-};
 const App = () => {
   const user = userStore((state) => state.user);
-
+  const location = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
   return (
     <>
-      <ScrollToTop>
-        {user && <Carts />}
-        <Suspense fallback={<Loading />}>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route path="/" element={<Home />}></Route>
-              <Route path="/shop" element={<Shop />}></Route>
-              <Route path="/product/:id" element={<ProductDetail />}></Route>
-              <Route
-                path="/sign-in"
-                element={
-                  <>{user ? <Navigate to="/"></Navigate> : <SignIn />}</>
-                }
-              ></Route>
-              <Route
-                path="/register"
-                element={
-                  <>{user ? <Navigate to="/"></Navigate> : <Register />}</>
-                }
-              ></Route>
-              <Route
-                path="/forgot-password"
-                element={<ForgotPassword />}
-              ></Route>
-              <Route path="/blogs" element={<Blogs />}></Route>
-              <Route path="/blog/:id" element={<Blog />}></Route>
-              <Route path="/order/:id" element={<OrderPreview />}></Route>
-              <Route
-                path="/orders"
-                element={
-                  !user ? <Navigate to="/sign-in"></Navigate> : <Orders />
-                }
-              ></Route>
-              <Route path="/sumary" element={<OrderSumary />}></Route>
-              <Route
-                path="/cart"
-                element={
-                  !user ? <Navigate to="/sign-in"></Navigate> : <CartPage />
-                }
-              ></Route>
-              <Route
-                path="/account"
-                element={
-                  !user ? <Navigate to="/sign-in"></Navigate> : <MyAccount />
-                }
-              ></Route>
-              <Route
-                path="/address"
-                element={
-                  !user ? <Navigate to="/sign-in"></Navigate> : <MyAccount />
-                }
-              ></Route>
-              <Route
-                path="/favorites"
-                element={
-                  !user ? <Navigate to="/sign-in"></Navigate> : <MyAccount />
-                }
-              ></Route>
-            </Route>
-            <Route path="*" element={<NotFound />}></Route>
-          </Routes>
-        </Suspense>
-      </ScrollToTop>
+      <div className="drawer">
+        <input id="my-drawer" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-content">
+          <div className="drawer drawer-end">
+            <input type="checkbox" id="cart-toggle" className="drawer-toggle" />
+            <div className="drawer-content">
+              <Suspense fallback={<Loading />}>
+                <Routes>
+                  <Route path="/" element={<Layout />}>
+                    <Route path="/" element={<Home />}></Route>
+                    <Route path="/shop" element={<Shop />}></Route>
+                    <Route
+                      path="/product/:id"
+                      element={<ProductDetail />}
+                    ></Route>
+                    <Route
+                      path="/sign-in"
+                      element={
+                        <>{user ? <Navigate to="/"></Navigate> : <SignIn />}</>
+                      }
+                    ></Route>
+                    <Route
+                      path="/register"
+                      element={
+                        <>
+                          {user ? <Navigate to="/"></Navigate> : <Register />}
+                        </>
+                      }
+                    ></Route>
+                    <Route
+                      path="/forgot-password"
+                      element={<ForgotPassword />}
+                    ></Route>
+                    <Route path="/blogs" element={<Blogs />}></Route>
+                    <Route path="/blog/:id" element={<Blog />}></Route>
+                    <Route path="/order/:id" element={<OrderPreview />}></Route>
+                    <Route
+                      path="/orders"
+                      element={
+                        !user ? <Navigate to="/sign-in"></Navigate> : <Orders />
+                      }
+                    ></Route>
+                    <Route path="/sumary" element={<OrderSumary />}></Route>
+                    <Route
+                      path="/cart"
+                      element={
+                        !user ? (
+                          <Navigate to="/sign-in"></Navigate>
+                        ) : (
+                          <CartPage />
+                        )
+                      }
+                    ></Route>
+                    <Route
+                      path="/account"
+                      element={
+                        !user ? (
+                          <Navigate to="/sign-in"></Navigate>
+                        ) : (
+                          <MyAccount />
+                        )
+                      }
+                    ></Route>
+                    <Route
+                      path="/address"
+                      element={
+                        !user ? (
+                          <Navigate to="/sign-in"></Navigate>
+                        ) : (
+                          <MyAccount />
+                        )
+                      }
+                    ></Route>
+                    <Route
+                      path="/favorites"
+                      element={
+                        !user ? (
+                          <Navigate to="/sign-in"></Navigate>
+                        ) : (
+                          <MyAccount />
+                        )
+                      }
+                    ></Route>
+                  </Route>
+                  <Route path="*" element={<NotFound />}></Route>
+                </Routes>
+              </Suspense>
+            </div>
+
+            <div className="drawer-side">
+              <label htmlFor="cart-toggle" className="drawer-overlay"></label>
+              <Carts />
+            </div>
+          </div>
+        </div>
+
+        <MobileNav></MobileNav>
+      </div>
     </>
   );
 };

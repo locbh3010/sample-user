@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { cartStore } from "../../../store/cart-store";
+import { useNavigate } from "react-router-dom";
 import CloseIcon from "../../icon/CloseIcon";
-import Button from "../button/Button";
 import { userStore } from "../../../store/user-store";
 import {
   collection,
@@ -12,18 +10,16 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { db } from "../../../configs/firebase-configs";
+import clsx from "clsx";
 
 export const Carts = () => {
-  const { isOpen, handleOpenCart } = cartStore((state) => state);
   const { user } = userStore((state) => state);
   const [total, setTotal] = useState(0);
-  const handleClickOverlay = () => {
-    handleOpenCart(false);
-  };
   const [carts, setCarts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (user.id) {
+    if (user?.id) {
       const cart = doc(collection(db, "carts"), user.id);
       onSnapshot(cart, (res) => {
         if (res.data()?.items?.length > 0) {
@@ -33,7 +29,7 @@ export const Carts = () => {
         }
       });
     }
-  }, []);
+  }, [user]);
   useEffect(() => {
     let total_ = 0;
     carts?.length > 0 &&
@@ -43,28 +39,30 @@ export const Carts = () => {
 
     setTotal(total_);
   }, [carts]);
+  const classesCart = clsx(
+    "fixed bg-white border-l border-gray-400 w-full max-w-[calc(80*4px)] top-0 right-0 h-full duration-300 h-screen"
+  );
+  const handleClickButton = () => {
+    const cartToggle = document.querySelector("input#cart-toggle");
+
+    cartToggle.checked = false;
+    navigate("/cart");
+  };
 
   return (
     <>
-      <div
-        className={`fixed inset-0 z-[60] bg-black/80 duration-300 ${
-          isOpen ? "opacity-40 visible" : "opacity-0 invisible"
-        }`}
-        onClick={handleClickOverlay}
-      ></div>
-      <div
-        className={`fixed z-[100] bg-white border-l border-gray-400 w-[400px] top-0 right-0 h-full duration-300 ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
+      <div className={classesCart}>
         <div className="w-full h-full flex flex-col justiy-between">
-          <div className="flex-shrink-0 w-full top-0 left-0 bg-white border-b border-gray-400 px-9 pt-[72px]">
-            <p className="font-semibold mb-4">Shopping bag</p>
+          <div className="flex-shrink-0 w-full top-0 left-0 bg-white border-b border-gray-400 px-9 pt-[72px] justify-between flex items-center pb-4">
+            <p className="font-semibold">Shopping bag</p>
+            <label htmlFor="cart-toggle" className="cursor-pointer">
+              <CloseIcon></CloseIcon>
+            </label>
           </div>
           <div className="flex-1 px-7 py-8 overflow-y-scroll gap-7 flex flex-col">
             {carts?.length > 0 &&
               carts.map((cart) => (
-                <CartItem key={cart.pid} cart={cart} uid={user.id} />
+                <CartItem key={cart.pid} cart={cart} uid={user?.id} />
               ))}
           </div>
 
@@ -73,9 +71,12 @@ export const Carts = () => {
               <span>Subtotal ({carts?.length})</span>
               <span>$ {total}</span>
             </div>
-            <Link to="/cart">
-              <Button type="primary">view cart</Button>
-            </Link>
+            <button
+              className="btn btn-dark rounded-sm w-full uppercase"
+              onClick={handleClickButton}
+            >
+              view cart
+            </button>
           </div>
         </div>
       </div>
@@ -85,26 +86,28 @@ export const Carts = () => {
 
 const CartItem = React.memo(({ cart, uid }) => {
   const [data, setData] = useState({});
-  const cartRef = doc(collection(db, "carts"), uid);
   const navigate = useNavigate();
   const handleDeleteItem = () => {
-    const { id } = data;
+    if (uid) {
+      const cartRef = doc(collection(db, "carts"), uid);
+      const { id } = data;
 
-    getDoc(cartRef).then((res) => {
-      if (res.data()) {
-        const items = res.data().items;
+      getDoc(cartRef).then((res) => {
+        if (res.data()) {
+          const items = res.data().items;
 
-        if (items.length > 0) {
-          const index = items.findIndex((obj) => {
-            return obj.pid === id;
-          });
+          if (items.length > 0) {
+            const index = items.findIndex((obj) => {
+              return obj.pid === id;
+            });
 
-          items.splice(index, 1);
+            items.splice(index, 1);
 
-          setDoc(cartRef, { items });
+            setDoc(cartRef, { items });
+          }
         }
-      }
-    });
+      });
+    }
   };
   const handleNavigate = () => {
     navigate(`/product/${data.id}`);
@@ -127,7 +130,7 @@ const CartItem = React.memo(({ cart, uid }) => {
       {data && (
         <>
           <div
-            className="overflow-hidden aspect-square rounded flex-shrink-0 cursor-pointer"
+            className="overflow-hidden aspect-square rounded flex-shrink-0 cursor-pointer bg-gray-200"
             onClick={handleNavigate}
           >
             {data?.images?.length > 0 && (
