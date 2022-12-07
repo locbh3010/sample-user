@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../configs/firebase-configs";
 import clsx from "clsx";
+import Button from "../button/Button";
 
 export const Carts = () => {
   const { user } = userStore((state) => state);
@@ -71,12 +72,9 @@ export const Carts = () => {
               <span>Subtotal ({carts?.length})</span>
               <span>$ {total}</span>
             </div>
-            <button
-              className="btn btn-dark rounded-sm w-full uppercase"
-              onClick={handleClickButton}
-            >
-              view cart
-            </button>
+            <Button onClick={handleClickButton} type="secondary">
+              View Cart
+            </Button>
           </div>
         </div>
       </div>

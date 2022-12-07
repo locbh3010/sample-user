@@ -1,11 +1,13 @@
 import clsx from "clsx";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Button = ({
   children,
   type = "primary",
   typeButton = "button",
   onClick = () => {},
+  to,
   className,
   ...props
 }) => {
@@ -16,11 +18,23 @@ const Button = ({
       : "bg-black text-white hover:bg-transparent hover:text-black",
     className
   );
-  return (
-    <button type={typeButton} className={classes} onClick={onClick} {...props}>
-      {children}
-    </button>
-  );
+  if (to)
+    return (
+      <Link to={to} className={classes} onClick={onClick}>
+        {children}
+      </Link>
+    );
+  else
+    return (
+      <button
+        type={typeButton}
+        className={classes}
+        onClick={onClick}
+        {...props}
+      >
+        {children}
+      </button>
+    );
 };
 
 export default React.memo(Button);

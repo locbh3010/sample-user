@@ -4,6 +4,7 @@ import { userStore } from "../../store/user-store";
 import CloseIcon from "../icon/CloseIcon";
 import ShoppingCart from "../icon/ShoppingCart";
 import UserIcon from "../icon/UserIcon";
+import Button from "../ui/button/Button";
 import { MenuList } from "./Nav";
 
 const handleClickMenuItem = () => {
@@ -125,22 +126,20 @@ const MobileNav = () => {
               </div>
             </div>
 
-            <li
-              className="mt-auto flex items-center gap-3 w-full btn btn-secondary justify-center"
-              onClick={handleSignOut}
-            >
+            <Button onClick={handleSignOut} className="mt-auto">
               Log Out
-            </li>
+            </Button>
           </>
         )}
         {!user && (
-          <Link
-            className="btn btn-secondary mt-auto w-full"
+          <Button
             to="/sign-in"
             onClick={handleClickMenuItem}
+            type="secondary"
+            className="mt-auto"
           >
-            Sign In
-          </Link>
+            sign in
+          </Button>
         )}
       </ul>
     </div>
