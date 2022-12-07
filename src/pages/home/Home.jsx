@@ -14,6 +14,8 @@ import banner2 from "../../images/banner (2).jpg";
 import banner3 from "../../images/banner (3).jpg";
 import banner4 from "../../images/banner (4).jpg";
 import Tooltip from "../../components/ui/Tooltip";
+import clsx from "clsx";
+import Grid from "../../components/layout/Grid";
 
 const slideImage = [banner1, banner2, banner3, banner4];
 
@@ -43,7 +45,7 @@ const Home = () => {
             }}
             navigation={true}
             modules={[Pagination, Navigation, Autoplay]}
-            className="w-full flex h-[60vh]"
+            className={clsx("w-full flex h-[50vh]", "lg:aspect-video")}
             autoplay={{
               delay: 2300,
               disableOnInteraction: false,
@@ -75,22 +77,31 @@ const Home = () => {
       </div>
       <div className="container mt-16 mb-[250px]">
         <div className="flex items-center justify-between mb-10">
-          <h2 className="font-medium text-3xl">Shop The Latest</h2>
+          <h2 className={clsx("text-xl font-medium", "sm:text-2xl")}>
+            Shop The Latest
+          </h2>
           <Tooltip tip="Go to shop">
             <Link
-              className="capitalize text-xl font-medium text-accent"
+              className={clsx(
+                "capitalize text-base font-medium text-accent",
+                "sm:text-lg",
+                "md:text-xl"
+              )}
               to="/shop"
             >
               View All
             </Link>
           </Tooltip>
         </div>
-        <ProductList>
+        <Grid
+          gap={6}
+          className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+        >
           {products?.length > 0 &&
             products.map((product) => (
               <ProductItem data={product} key={product.id}></ProductItem>
             ))}
-        </ProductList>
+        </Grid>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import {
   collection,
   onSnapshot,
@@ -6,6 +7,7 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
+import Grid from "../../components/layout/Grid";
 import { ProductItem } from "../../components/ui/product/Product";
 import { db } from "../../configs/firebase-configs";
 
@@ -25,7 +27,6 @@ const removeToneVietnamese = (str) => {
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
-  const filterRef = useRef(null);
   const [categories, setCategories] = useState([]);
   const searchRef = useRef(null);
   const [filter, setFilter] = useState({
@@ -54,13 +55,6 @@ const Shop = () => {
 
   useEffect(() => {
     const cateRef = collection(db, "categories");
-    const handleStickyFilter = () => {
-      const scrollY = window.scrollY;
-      scrollY > 150
-        ? filterRef.current?.classList.add("translate-y-24")
-        : filterRef.current?.classList.remove("translate-y-24");
-    };
-
     onSnapshot(cateRef, (res) => {
       let temp = [];
       res.docs.length > 0 &&
@@ -68,11 +62,6 @@ const Shop = () => {
 
       setCategories(temp);
     });
-
-    window.addEventListener("scroll", handleStickyFilter);
-    return () => {
-      window.removeEventListener("scroll", handleStickyFilter);
-    };
   }, []);
   useEffect(() => {
     const colRef = collection(db, "products");
@@ -118,14 +107,21 @@ const Shop = () => {
     <div className="pt-24 pb-[250px]">
       <div className="container">
         <h1 className="text-3xl font-medium mb-10">Shop The Latest</h1>
-        <div className="flex items-start gap-9 relative">
+        <div className="flex gap-9 relative flex-col xl:flex-row ">
           <div
-            className="basis-[20%] flex-shrink-0 sticky top-0 left-0 duration-300"
-            ref={filterRef}
+            className={clsx(
+              "flex-shrink-0",
+              "z-30",
+              "xl:basis-[20%]",
+              "bg-white"
+            )}
           >
-            <div className="flex flex-col gap-4 mb-12">
+            <Grid
+              gap="4"
+              className="grid-cols-1 sm:grid-cols-3 w-full xl:grid-cols-1"
+            >
               <form onSubmit={handleSearch}>
-                <div className="flex items-center gap-5 w-[300px] border border-gray-300 rounded py-3 px-5">
+                <div className="flex items-center gap-5 w-full border border-gray-300 rounded py-3 px-5">
                   <button type="submit" className="flex-shrink-0 text-gray-500">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +146,6 @@ const Shop = () => {
                   />
                 </div>
               </form>
-
               <select
                 name="sort"
                 id="sort"
@@ -175,15 +170,15 @@ const Shop = () => {
                     </option>
                   ))}
               </select>
-            </div>
+            </Grid>
           </div>
-          <div className="flex-1">
-            <div className="grid grid-cols-3 grid-flow-row auto-rows-fr gap-10">
+          <div className="flex-1 mt-10 lg:mt-0">
+            <Grid gap={6} className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
               {products?.length > 0 &&
                 products.map((data) => (
                   <ProductItem key={data.id} data={data} />
                 ))}
-            </div>
+            </Grid>
           </div>
         </div>
       </div>

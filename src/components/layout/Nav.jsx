@@ -27,10 +27,12 @@ export const MenuList = [
 ];
 const MenuItem = ({ to, children }) => {
   const className = (isActive) => {
-    const baseClass = "border-b-2 px-8 duration-300 py-6";
+    const baseClass = "border-b-2 px-8 duration-300 py-5 duration-300";
     return clsx(
       baseClass,
-      isActive ? "border-b-blue-500" : "border-b-transparent"
+      isActive
+        ? "border-b-blue-500"
+        : "border-b-transparent hover:border-b-blue-500/40"
     );
   };
   return (
@@ -101,13 +103,16 @@ const Nav = () => {
         </div>
         <div className="navbar-end">
           <div className="flex items-center gap-6">
+            <Link to="/shop" className="hidden md:block">
+              <SearchIcon />
+            </Link>
             <button onClick={handleClickButtonCart}>
               <Tooltip tip="My cart" className="tooltip-bottom">
                 <ShoppingCart className="pointer-events-none"></ShoppingCart>
               </Tooltip>
             </button>
             {!user ? (
-              <Link to="/sign-in">
+              <Link to="/sign-in" className="hidden md:block">
                 <UserIcon></UserIcon>
               </Link>
             ) : (
@@ -171,57 +176,9 @@ const Nav = () => {
   };
 
   return (
-    <div className="w-full sticky top-0 left-0 z-50 bg-white/80 mb-4 backdrop-blur-sm">
+    <div className="w-full sticky top-0 left-0 z-50 bg-white/80 backdrop-blur-sm">
       <div className="container">
-        {/* <div className="flex items-center justify-between">
-          <Link
-            to="/"
-            className="text-[35px] uppercase font-semibold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-blue-500"
-          >
-            GoldenBees
-          </Link>
-          <div className="flex items-center gap-16 capitalize font-medium">
-            <div className="flex items-center">
-              {MenuList.map((menu) => (
-                <MenuItem to={menu.to} key={menu.display}>
-                  {menu.display}
-                </MenuItem>
-              ))}
-            </div>
-            <Link to="/shop">
-              <SearchIcon></SearchIcon>
-            </Link>
-            <button className="toggle-cart" onClick={handleClickButtonCart}>
-              <ShoppingCart className="pointer-events-none"></ShoppingCart>
-            </button>
-            {!user ? (
-              <Link to="/sign-in">
-                <UserIcon></UserIcon>
-              </Link>
-            ) : (
-              <div className="flex items-center gap-4">
-                <Link
-                  to="/account"
-                  className="rounded-full w-12 h-12 overflow-hidden bg-black flex-shrink-0"
-                >
-                  <img
-                    src={user.avatar}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
-                </Link>
-                <Button
-                  type="secondary"
-                  style={{ paddingInline: "16px" }}
-                  onClick={handleSignOut}
-                >
-                  Sign out
-                </Button>
-              </div>
-            )}
-          </div>
-        </div> */}
-        <Navbar></Navbar>
+        <Navbar />
       </div>
     </div>
   );

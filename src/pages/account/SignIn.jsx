@@ -43,7 +43,7 @@ const SignIn = () => {
             };
 
             setUser(currentUser);
-            navigate("/");
+            history.back();
             return;
           } else {
             toast.error("Password is wrong");

@@ -38,6 +38,7 @@ const ProductDetail = () => {
   const descriptionShowcase = useRef(null);
   const navigate = useNavigate();
   const [amount, setAmount] = useState(1);
+  const [isInFavorites, setIsInFavorites] = useState(false);
 
   const [product, setProduct] = useState({});
   const [similars, setSimilars] = useState([]);
@@ -79,6 +80,20 @@ const ProductDetail = () => {
       product?.description
     );
   }, [product]);
+  useEffect(() => {
+    if (user) {
+      const favoriteRef = doc(collection(db, "favorites"), user?.id);
+      onSnapshot(favoriteRef, (res) => {
+        if (res.data()?.items?.length > 0) {
+          res.data()?.items.forEach((item) => {
+            const currentId = item.id;
+
+            currentId === id ? setIsInFavorites(true) : setIsInFavorites(false);
+          });
+        }
+      });
+    }
+  }, []);
 
   const handleAddToCart = useCallback(() => {
     if (user && product.count !== 0) {
@@ -141,44 +156,53 @@ const ProductDetail = () => {
     }
   };
   const handleFavoriteClick = () => {
-    const favoriteRef = doc(collection(db, "favorites"), user.id);
-    getDoc(favoriteRef).then((res) => {
-      if (res.data()?.items) {
-        const { items } = res.data();
-        if (items.length > 0) {
-          const index = items.findIndex((obj) => {
-            return obj.id === productRef.id;
-          });
-          if (index === -1) {
-            items.unshift(productRef);
+    if (user) {
+      const favoriteRef = doc(collection(db, "favorites"), user?.id);
+
+      getDoc(favoriteRef).then((res) => {
+        if (res.data()?.items) {
+          const { items } = res.data();
+          if (items.length > 0) {
+            const index = items.findIndex((obj) => {
+              return obj.id === productRef.id;
+            });
+            if (index === -1) {
+              items.unshift(productRef);
+              setDoc(favoriteRef, { items }).then(() => {
+                toast.success("Add to favorite success");
+                setIsInFavorites(true);
+                return;
+              });
+            } else {
+              items.splice(index, 1);
+              setDoc(favoriteRef, { items }).then((res) => {
+                toast.success("removed from favorites");
+                setIsInFavorites(false);
+              });
+              return;
+            }
+          } else {
+            items.push(productRef);
             setDoc(favoriteRef, { items }).then(() => {
               toast.success("Add to favorite success");
+              setIsInFavorites(true);
               return;
             });
-          } else {
-            items.splice(index, 1);
-            setDoc(favoriteRef, { items }).then((res) => {
-              toast.success("removed from favorites");
-            });
-            return;
           }
         } else {
-          items.push(productRef);
-          setDoc(favoriteRef, { items }).then(() => {
+          const data = {
+            items: [productRef],
+          };
+          setDoc(favoriteRef, data).then(() => {
             toast.success("Add to favorite success");
+            setIsInFavorites(true);
             return;
           });
         }
-      } else {
-        const data = {
-          items: [productRef],
-        };
-        setDoc(favoriteRef, data).then(() => {
-          toast.success("Add to favorite success");
-          return;
-        });
-      }
-    });
+      });
+    } else {
+      navigate("/sign-in");
+    }
   };
 
   return (
@@ -193,10 +217,6 @@ const ProductDetail = () => {
               navigation={true}
               modules={[Pagination, Navigation, Autoplay]}
               className="w-full h-full flex"
-              autoplay={{
-                delay: 1500,
-                disableOnInteraction: false,
-              }}
             >
               {product?.images?.length > 0 &&
                 product.images.map((img) => (
@@ -220,7 +240,7 @@ const ProductDetail = () => {
                 className="inline-block bg-blue-500/30 text-blue-500 rounded px-3 py-4 text-sm font-bold"
                 onClick={handleFavoriteClick}
               >
-                Favorite
+                {isInFavorites ? "Remove From Favorite" : "Add to favorite"}
               </button>
             </h1>
 

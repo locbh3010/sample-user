@@ -36,7 +36,7 @@ const MobileNav = () => {
 
         <Link
           to="/"
-          className="text-[35px] uppercase font-semibold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-blue-500 mb-4"
+          className="text-xl uppercase font-semibold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-blue-500 mb-4"
           onClick={handleClickMenuItem}
         >
           GoldenBees
@@ -136,7 +136,7 @@ const MobileNav = () => {
             to="/sign-in"
             onClick={handleClickMenuItem}
             type="secondary"
-            className="mt-auto"
+            className="mt-auto flex-center"
           >
             sign in
           </Button>

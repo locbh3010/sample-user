@@ -2,7 +2,7 @@ import clsx from "clsx";
 import React from "react";
 
 const Tooltip = ({ tip, className, children }) => {
-  const classes = clsx("tooltip", className);
+  const classes = clsx("xl:tooltip", className);
   return (
     <div className={classes} data-tip={tip}>
       {children}
