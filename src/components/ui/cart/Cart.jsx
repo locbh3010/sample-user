@@ -61,10 +61,13 @@ export const Carts = () => {
             </label>
           </div>
           <div className="flex-1 px-7 py-8 overflow-y-scroll gap-7 flex flex-col">
-            {carts?.length > 0 &&
+            {carts?.length > 0 ? (
               carts.map((cart) => (
                 <CartItem key={cart.pid} cart={cart} uid={user?.id} />
-              ))}
+              ))
+            ) : (
+              <span> You have no items in your cart</span>
+            )}
           </div>
 
           <div className="flex-shrink-0 w-full bottom-0 left-0 border-t border-gray-400 py-7 px-9 bg-white mt-auto">

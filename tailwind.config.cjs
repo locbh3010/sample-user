@@ -20,7 +20,12 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/line-clamp"), require("daisyui")],
+  plugins: [
+    require("tailwindcss-animation-delay"),
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/line-clamp"),
+    require("daisyui"),
+  ],
   daisyui: {
     darkTheme: "light",
   },

@@ -3,7 +3,11 @@ import React, { useEffect, useState } from "react";
 import { db } from "../../configs/firebase-configs";
 import { collection } from "firebase/firestore";
 import { Link } from "react-router-dom";
-import { ProductItem, ProductList } from "../../components/ui/product/Product";
+import {
+  ProductItem,
+  ProductItemSkeleton,
+  ProductList,
+} from "../../components/ui/product/Product";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
@@ -97,10 +101,18 @@ const Home = () => {
           gap={6}
           className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
         >
-          {products?.length > 0 &&
+          {products?.length > 0 ? (
             products.map((product) => (
               <ProductItem data={product} key={product.id}></ProductItem>
-            ))}
+            ))
+          ) : (
+            <>
+              <ProductItemSkeleton />
+              <ProductItemSkeleton />
+              <ProductItemSkeleton />
+              <ProductItemSkeleton />
+            </>
+          )}
         </Grid>
       </div>
     </div>

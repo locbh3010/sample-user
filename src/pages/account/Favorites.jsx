@@ -46,8 +46,8 @@ const Item = ({ data }) => {
   };
 
   return (
-    <div className="rounded-lg bg-white shadow-md p-4 flex flex-col group">
-      <div
+    <div className="rounded-lg bg-white shadow-md p-2 flex flex-col group card card-compact md:card-normal">
+      <figure
         className="rounded-lg bg-gray-300 aspect-video flex-shrink-0 mb-4 overflow-hidden cursor-pointer"
         onClick={handleNavigate}
       >
@@ -58,11 +58,11 @@ const Item = ({ data }) => {
             className="w-full h-full object-cover duration-300 group-hover:scale-125"
           />
         )}
-      </div>
-      <div className="flex-1 flex flex-col gap-6">
+      </figure>
+      <div className="flex-1 flex flex-col gap-6 card-body -mx-6 -my-7">
         <div>
           <p
-            className="font-semibold mb-2 line-clamp-1 text-slate-900"
+            className="font-semibold mb-2 line-clamp-1 text-slate-900 card-title"
             onClick={handleNavigate}
           >
             {favorite?.name}
@@ -70,9 +70,9 @@ const Item = ({ data }) => {
           <p className="font-semibold mb-4 text-accent">${favorite?.price}</p>
         </div>
 
-        <div className="mt-auto flex gap-2">
+        <div className="mt-auto flex gap-2 card-actions">
           <button
-            className="w-12 h-12 bg-red-500 rounded flex items-center justify-center text-white cursor-pointer duration-300 hover:shadow flex-shrink-0"
+            className="btn btn-square text-white rounded-md btn-error"
             onClick={handleRemove}
           >
             <svg
@@ -91,7 +91,7 @@ const Item = ({ data }) => {
             </svg>
           </button>
           <button
-            className="flex-1 h-12 bg-blue-500 rounded text-white flex-center font-semibold duration-300 cursor-pointer hover:bg-blue-500/80"
+            className="btn btn-primary rounded-md flex-1"
             onClick={handleNavigate}
           >
             View detail
@@ -101,10 +101,29 @@ const Item = ({ data }) => {
     </div>
   );
 };
+const Skeleton = () => {
+  return (
+    <div className="rounded-lg bg-white shadow-md p-2 flex flex-col group card card-compact md:card-normal">
+      <figure className="rounded-lg bg-gray-300 aspect-video flex-shrink-0 mb-4 overflow-hidden cursor-pointer animate-pulse"></figure>
+      <div className="flex-1 flex flex-col gap-6 card-body -mx-6 -my-7">
+        <div>
+          <div className="w-full bg-gray-300 h-6 animate-pulse rounded-md mb-3 animation-delay-200"></div>
+          <div className="w-14 bg-gray-300 h-5 animate-pulse rounded-md animation-delay-100"></div>
+        </div>
+
+        <div className="mt-auto flex gap-2 card-actions">
+          <button className="btn btn-square rounded-md btn-error animate-pulse animation-delay-1000"></button>
+          <button className="btn btn-primary rounded-md flex-1 animate-pulse animation-delay-300"></button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Favorites = () => {
   const user = userStore((state) => state.user);
   const favoriteCol = collection(db, "favorites");
+  const [loading, setLoading] = useState(true);
 
   const [favorites, setFavorites] = useState([]);
 
@@ -112,22 +131,41 @@ const Favorites = () => {
     const favoriteRef = doc(favoriteCol, user.id);
 
     onSnapshot(favoriteRef, (res) => {
+      setLoading(true);
       const data = res.data();
 
-      if (data?.items?.length > 0) setFavorites(data.items);
-      else if (!data.items || data.items.length === 0) setFavorites([]);
+      if (data?.items?.length > 0) {
+        setFavorites(data.items);
+        setLoading(false);
+      } else if (!data.items || data.items.length === 0) {
+        setFavorites([]);
+        setLoading(false);
+      }
     });
   }, [user.id]);
 
   return (
     <div className="py-8">
       <div className="container">
-        <div className="grid grid-cols-3 gap-6 grid-flow-row auto-rows-fr">
-          {favorites.length > 0 &&
+        <div className="grid grid-cols-1 gap-6 grid-flow-row auto-rows-fr sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {!loading &&
+            favorites.length > 0 &&
             favorites.map((favorite) => (
               <Item key={favorite.id} data={favorite} />
             ))}
+          {loading && (
+            <>
+              <Skeleton></Skeleton>
+              <Skeleton></Skeleton>
+              <Skeleton></Skeleton>
+              <Skeleton></Skeleton>
+            </>
+          )}
         </div>
+
+        {!loading && favorites?.length === 0 && (
+          <span>You have not item in your favorites</span>
+        )}
       </div>
     </div>
   );

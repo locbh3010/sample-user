@@ -4,7 +4,7 @@ import Tooltip from "../Tooltip";
 
 export const ProductList = ({ children }) => {
   return (
-    <div className="grid grid-cols-4 gap-12 grid-flow-row auto-rows-fr">
+    <div className="grid grid-cols-1 gap-12 grid-flow-row auto-rows-fr sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
       {children}
     </div>
   );
@@ -42,3 +42,15 @@ export const ProductItem = React.memo(({ data }) => {
     </Tooltip>
   );
 });
+
+export const ProductItemSkeleton = () => {
+  return (
+    <div className="w-full card card-compact md:card-normal cursor-pointer group">
+      <figure className="rounded-lg overflow-hidden aspect-square rounded-b-none bg-gray-light relative animate-pulse animation-delay-200"></figure>
+      <div className="text-left mt-2 px-3">
+        <div className="bg-gray-light animate-pulse w-full h-7 rounded animation-delay-500"></div>
+        <div className="bg-gray-light animate-pulse w-1/3 h-5 rounded mt-3 animation-delay-1000"></div>
+      </div>
+    </div>
+  );
+};

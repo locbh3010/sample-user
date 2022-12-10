@@ -25,7 +25,7 @@ const schema = yup.object().shape({
     .max(30)
     .min(3),
   email: yup.string().email().required(),
-  password: yup.string().min(1).max(16).required(),
+  password: yup.string().min(6).max(16).required(),
 });
 const Register = () => {
   const {
@@ -46,6 +46,8 @@ const Register = () => {
     const count = await getCountFromServer(query_);
     value.fullname = value.fullname.replace(/\s\s+/g, " ");
     value.fullname = titleCase(value.fullname);
+    value.avatar =
+      "https://i.pinimg.com/236x/c6/e5/65/c6e56503cfdd87da299f72dc416023d4.jpg";
     if (count.data().count) {
       toast.error("This email already exists");
     } else {

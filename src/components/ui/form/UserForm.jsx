@@ -19,12 +19,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  nameRegExp,
-  phoneRegExp,
-  titleCase,
-  passwordRegExp,
-} from "../../../utils/function";
+import { nameRegExp, phoneRegExp, titleCase } from "../../../utils/function";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -32,8 +27,7 @@ const schema = yup.object().shape({
     .string()
     .matches(phoneRegExp, "Phone number is not valids")
     .min(10)
-    .max(11)
-    .required(),
+    .max(11),
   fullname: yup.string().matches(nameRegExp, "Name is not valid").required(),
 });
 const UserForm = () => {

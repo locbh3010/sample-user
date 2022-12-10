@@ -3,7 +3,7 @@ import UserForm from "../../components/ui/form/UserForm";
 
 const ProfileDetail = () => {
   return (
-    <div>
+    <div className="px-5">
       <UserForm />
     </div>
   );

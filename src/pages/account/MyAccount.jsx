@@ -34,14 +34,6 @@ const MyAccount = () => {
             >
               Profile detail
             </NavLink>
-            {/* <NavLink
-              to="/address"
-              className={({ isActive }) =>
-                isActive ? classNameTabIsActive : classNameTabNonActive
-              }
-            >
-              Address Shipping
-            </NavLink> */}
             <NavLink
               to="/favorites"
               className={({ isActive }) =>

@@ -8,7 +8,10 @@ import {
 } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
 import Grid from "../../components/layout/Grid";
-import { ProductItem } from "../../components/ui/product/Product";
+import {
+  ProductItem,
+  ProductItemSkeleton,
+} from "../../components/ui/product/Product";
 import { db } from "../../configs/firebase-configs";
 
 const removeToneVietnamese = (str) => {
@@ -29,12 +32,14 @@ const Shop = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const searchRef = useRef(null);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState({
     sortByPrice: 0,
     shopByCategory: 0,
     text: null,
   });
   const handleGetData = (res) => {
+    setLoading(true);
     let temp = [];
     res.docs.length > 0 &&
       res.docs.map((doc) => {
@@ -49,6 +54,7 @@ const Shop = () => {
         }
       });
     setProducts(temp);
+    setLoading(false);
 
     window.scrollTo(0, 0);
   };
@@ -174,9 +180,21 @@ const Shop = () => {
           </div>
           <div className="flex-1 mt-10 lg:mt-0">
             <Grid gap={6} className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-              {products?.length > 0 &&
+              {!loading &&
+                products?.length > 0 &&
                 products.map((data) => (
                   <ProductItem key={data.id} data={data} />
+                ))}
+              {loading ||
+                (products?.length === 0 && (
+                  <>
+                    <ProductItemSkeleton></ProductItemSkeleton>
+                    <ProductItemSkeleton></ProductItemSkeleton>
+                    <ProductItemSkeleton></ProductItemSkeleton>
+                    <ProductItemSkeleton></ProductItemSkeleton>
+                    <ProductItemSkeleton></ProductItemSkeleton>
+                    <ProductItemSkeleton></ProductItemSkeleton>
+                  </>
                 ))}
             </Grid>
           </div>

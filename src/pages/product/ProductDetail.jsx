@@ -208,8 +208,19 @@ const ProductDetail = () => {
   return (
     <div className="mt-[128px] mb-[250px]">
       <div className="container">
-        <div className="grid grid-cols-2 gap-16">
-          <div className="aspect-[16/10] overflow-hidden border border-gray-300">
+        <div className="prose">
+          <h1 className="text-2xl text-black lg:hidden mb-12">
+            {product?.name} -{" "}
+            <button
+              className="inline-block bg-blue-500/30 text-blue-500 rounded px-3 py-4 text-sm font-bold"
+              onClick={handleFavoriteClick}
+            >
+              {isInFavorites ? "Remove From Favorite" : "Add to favorite"}
+            </button>
+          </h1>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-12">
+          <div className="aspect-video overflow-hidden border border-gray-300">
             <Swiper
               pagination={{
                 type: "progressbar",
@@ -234,7 +245,7 @@ const ProductDetail = () => {
             </Swiper>
           </div>
           <div>
-            <h1 className="text-3xl text-black mb-6 font-medium">
+            <h1 className="text-3xl text-black mb-6 font-medium hidden lg:block">
               {product?.name} -{" "}
               <button
                 className="inline-block bg-blue-500/30 text-blue-500 rounded px-3 py-4 text-sm font-bold"
@@ -244,37 +255,40 @@ const ProductDetail = () => {
               </button>
             </h1>
 
-            <span className="block text-accent font-medium text-xl">
+            <span className="text-accent font-medium text-2xl hidden lg:block">
               ${product?.price}
             </span>
             <p
               className="py-12 text-gray-dark mb-10 text-ellipsis line-clamp-1"
               ref={descriptionShowcase}
             ></p>
-            <div className="flex gap-4">
-              <div className="flex-shrink-0 grid grid-cols-3 rounded bg-gray-light text-gray-dark font-bold basis-1/3 overflow-hidden select-none">
-                <div
-                  className="aspect-square flex items-center justify-center h-full cursor-pointer duration-300 hover:bg-gray-400 rounded-l"
+            <span className="text-2xl text-accent py-3 block lg:hidden">
+              Price: ${product?.price}
+            </span>
+            <div className="flex gap-4 flex-col md:flex-row">
+              <div className="flex-shrink-0 grid grid-cols-3 bg-gray-light overflow-hidden rounded-lg md:flex-shrink-0 md:w-1/2">
+                <button
+                  className="btn btn-square btn-block h-full bg-gray-light active:bg-gray-dark border-none text-black hover:bg-gray-300"
                   data-type="dec"
                   onClick={handleActionAmount}
                 >
                   -
-                </div>
-                <div className="aspect-square flex items-center justify-center h-full cursor-pointer">
+                </button>
+                <div className="btn btn-square btn-block btn-ghost btn-disabled text-black bg-gray-light h-full">
                   {amount}
                 </div>
-                <div
-                  className="aspect-square flex items-center justify-center h-full cursor-pointer duration-300 hover:bg-gray-400 rounded-r"
+                <button
+                  className="btn btn-square bg-gray-light btn-block border-none active:bg-gray-dark text-black h-full"
                   data-type="inc"
                   onClick={handleActionAmount}
                 >
                   +
-                </div>
+                </button>
               </div>
               <Button onClick={handleAddToCart}>add to cart</Button>
             </div>
 
-            <div className="mt-10 flex flex-col gap-2">
+            <div className="mt-10 flex flex-col">
               <p className="text-black font-medium">
                 Amount: <span className="text-gray-dark">{product?.count}</span>
               </p>
@@ -287,8 +301,11 @@ const ProductDetail = () => {
         </div>
 
         <div className="py-24">
-          <p className="mb-8 text-black font-medium text-xl">Description</p>
-          <span className="block w-full h-0.5 bg-gray-light mb-10"></span>
+          <div className="tabs w-full">
+            <p className="mb-8 text-black font-medium text-xl tab tab-bordered">
+              Description
+            </p>
+          </div>
           <p ref={description} className="text-dark-gray"></p>
         </div>
 

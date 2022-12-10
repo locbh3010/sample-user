@@ -1,9 +1,8 @@
 import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import CloseIcon from "../../components/icon/CloseIcon";
-import Button from "../../components/ui/button/Button";
 import { db } from "../../configs/firebase-configs";
 import { userStore } from "../../store/user-store";
 
@@ -33,27 +32,36 @@ const CartPage = () => {
       }
     };
     return (
-      <div className="flex items-start gap-10 w-full relative pb-10 border-b border-gray-light">
-        <div className="overflow-hidden rounded aspect-square w-[15%]">
+      <div className="border-gray-light card gap-2 card-compact sm:card-normal sm:card-side">
+        <figure className="overflow-hidden rounded aspect-video w-full bg-gray-100 relative sm:w-1/3 flex-shrink-0">
           {product?.images && (
             <img
               src={product.images[0]}
               alt=""
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover cursor-pointer"
+              onClick={() => navigate(`/product/${data.pid}`)}
             />
           )}
-        </div>
-        <div>
-          <p className="text-xl text-black font-medium mb-3.5 capitalize">
+          <button className="absolute top-2 right-2 btn btn-ghost sm:hidden">
+            <CloseIcon />
+          </button>
+        </figure>
+        <div className="card-body p-0">
+          <p
+            className="text-black font-medium mb-3.5 capitalize card-title cursor-pointer"
+            onClick={() => navigate(`/product/${data.pid}`)}
+          >
             {product?.name}
           </p>
-          <p className="text-gray-dark">Black / Medium</p>
-          <span className="text-accent">
+          <span className="text-accent text-lg">
             ${data.price} - {data.amount}
           </span>
         </div>
 
-        <button className="absolute top-0 right-0 z-50" onClick={handleDelete}>
+        <button
+          className="btn btn-ghost hidden sm:block absolute top-3 right-3"
+          onClick={handleDelete}
+        >
           <CloseIcon width="24px" />
         </button>
       </div>
@@ -91,17 +99,41 @@ const CartPage = () => {
         <h1 className="mb-16 text-center capitalize font-bold text-4xl text-black">
           shopping cart
         </h1>
-        <div className="py-10 max-w-4xl mx-auto flex items-center justify-between">
+        <div
+          className="py-10
+          max-w-4xl
+          mx-auto
+          flex
+          items-start
+          justify-between
+          flex-col
+          gap-3
+          sm:flex-row
+          "
+        >
           <div className="font-bold uppercase flex-1 flex-shrink-0 basis-[70%]">
             total ({carts.length} Item): ${total}
           </div>
-          <Button type="secondary">
-            <span onClick={handleNavigate}>PROCEED TO CHECKOUT</span>
-          </Button>
+          <button
+            className="btn bg-black rounded-sm text-white btn-sm sm:btn-md btn-ghost"
+            onClick={handleNavigate}
+          >
+            CHECKOUT
+          </button>
         </div>
-        <div className="max-w-4xl mx-auto grid grid-cols-1 grid-flow-row auto-rows-fr gap-10">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 grid-flow-row auto-rows-fr gap-7">
           {carts?.length > 0 &&
             carts.map((cart) => <CartItem key={cart.pid} data={cart} />)}
+          {carts?.length === 0 && (
+            <>
+              <span>You have no items in your shopping cart</span>
+              <div className="tooltip btn-wide" data-tip="Go to shop">
+                <Link className="btn btn-secondary btn-wide" to="/shop">
+                  Continue Shopping
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

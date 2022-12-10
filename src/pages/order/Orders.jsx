@@ -67,19 +67,21 @@ const Orders = () => {
       <div className="container">
         <h1 className="text-4xl mb-10 text-gray-dark capitalize">My Order</h1>
         <div className="py-10">
-          <select onChange={handleSelectChange}>
-            <option value="0" className="capitalize">
-              All status
-            </option>
-            {statusList.map((status) => (
-              <option className="capitalize" value={status} key={status}>
-                {status}
+          <div className="w-full tooltip" data-tip="Query order with status">
+            <select onChange={handleSelectChange} className="font-medium">
+              <option value="0" className="capitalize">
+                All status
               </option>
-            ))}
-          </select>
+              {statusList.map((status) => (
+                <option className="capitalize" value={status} key={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="overflow-x-auto relative">
-          <table className="w-full text-sm text-left text-gray-500 ">
+          <table className="w-full text-sm text-left text-gray-500 table">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50">
               <tr>
                 <th scope="col" className="py-3 px-6">
@@ -104,6 +106,18 @@ const Orders = () => {
                 orders.map((order) => (
                   <OrderItem key={order.id} order={order} />
                 ))}
+              {orders?.length === 0 && (
+                <>
+                  <span className="mt-7 block">
+                    You have no items in your orders
+                  </span>
+                  <div className="tooltip  mt-4" data-tip="Go to shop">
+                    <Link to="/shop" className="btn btn-secondary btn-wide">
+                      Continue Shopping
+                    </Link>
+                  </div>
+                </>
+              )}
             </tbody>
           </table>
         </div>
