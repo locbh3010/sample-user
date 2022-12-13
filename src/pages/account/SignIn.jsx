@@ -76,7 +76,7 @@ const SignIn = () => {
             <div className="w-full grid grid-cols-2 gap-1.5 p-1.5 rounded-lg bg-gray-light">
               <NavLink
                 to="/sign-in"
-                className={`w-full rounded-lg duration-300 bg-transparent hover:bg-white/50 cursor-pointer h-full flex-center py-3 text-xl font-medium`}
+                className={`w-full rounded-lg duration-300 bg-transparent bg-white cursor-pointer h-full flex-center py-3 text-xl font-medium`}
                 style={(isActive) => ({
                   background: isActive ? "white" : "transparent",
                 })}
