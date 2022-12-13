@@ -15,7 +15,7 @@ const Blog = () => {
       if (res.data()) {
         setBlog({ id: res.id, ...res.data() });
         content.current.textContent = "";
-        content.current.insertAdjacentHTML("beforeend", res.data().description);
+        content.current.insertAdjacentHTML("beforeend", res.data().content);
       } else {
         navigate("/not-found");
       }

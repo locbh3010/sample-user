@@ -50,8 +50,15 @@ const App = () => {
   const user = userStore((state) => state.user);
   const location = useLocation();
   useEffect(() => {
+    document.documentElement.scrollTo({
+      top: 0,
+      left: 0,
+    });
     window.scrollTo(0, 0);
-  }, [location.pathname]);
+    window.scrollTo({
+      top: 0,
+    });
+  }, [location]);
   return (
     <>
       <div className="drawer">

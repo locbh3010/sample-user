@@ -268,7 +268,7 @@ const UserForm = () => {
         <Input
           control={control}
           name="phone"
-          placeholder="Your phome number"
+          placeholder="Your phone number"
         ></Input>
         <Button typeButton="submit">Save change</Button>
       </form>
