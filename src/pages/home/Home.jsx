@@ -24,16 +24,16 @@ import Grid from "../../components/layout/Grid";
 const slideImage = [banner1, banner2, banner3, banner4];
 
 const Home = () => {
-  const colRef = query(collection(db, "products"), limit(8));
+  const productCol = collection(db, "products");
+  const resultProducts = query(productCol, limit(16));
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    onSnapshot(colRef, (res) => {
-      const docs = res.docs;
+    onSnapshot(resultProducts, (res) => {
       let temp = [];
-
-      docs?.length > 0 &&
-        docs.map((doc) => temp.push({ id: doc.id, ...doc.data() }));
+      if (res.docs.length > 0) {
+        res.docs.map((doc) => temp.push({ id: doc.id, ...doc.data() }));
+      }
 
       setProducts(temp);
     });
@@ -98,7 +98,7 @@ const Home = () => {
           </Tooltip>
         </div>
         <Grid
-          gap={6}
+          gap={5}
           className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
         >
           {products?.length > 0 ? (

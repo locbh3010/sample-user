@@ -1,3 +1,4 @@
+import { Button } from "myLib";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "../Tooltip";

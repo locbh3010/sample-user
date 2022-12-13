@@ -29,4 +29,5 @@ module.exports = {
   daisyui: {
     darkTheme: "light",
   },
+  important: true,
 };

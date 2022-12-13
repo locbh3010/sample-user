@@ -48,16 +48,15 @@ const CartPage = () => {
         </figure>
         <div className="card-body p-0">
           <p
-            className="text-black font-medium mb-3.5 capitalize card-title cursor-pointer"
+            className="text-black font-medium capitalize card-title cursor-pointer basis-0"
             onClick={() => navigate(`/product/${data.pid}`)}
           >
             {product?.name}
           </p>
-          <span className="text-accent text-lg">
-            ${data.price} - {data.amount}
+          <span className="text-accent text-lg flex-1">
+            ${data.price} - Amount: {data.amount}
           </span>
         </div>
-
         <button
           className="btn btn-ghost hidden sm:block absolute top-3 right-3"
           onClick={handleDelete}

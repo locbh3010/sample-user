@@ -39,7 +39,6 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const [amount, setAmount] = useState(1);
   const [isInFavorites, setIsInFavorites] = useState(false);
-
   const [product, setProduct] = useState({});
   const [similars, setSimilars] = useState([]);
 
@@ -55,7 +54,7 @@ const ProductDetail = () => {
         colRef,
         where("cateId", "==", product.cateId),
         where(documentId(), "!=", id),
-        limit(3)
+        limit(4)
       );
 
       getDocs(similarRef).then((res) => {
